@@ -1,0 +1,77 @@
+/ssl
+/_assets/**/*
+/data/**/*
+
+### OSX  and editor cruft###
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+.cache
+.project
+.pydevproject
+.settings
+.tmproj
+*.esproj
+nbproject
+*.sublime-project
+*.sublime-workspace
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.iml
+
+
+# Numerous always-ignore extensions
+*.diff
+*.err
+*.orig
+*.rej
+*.swo
+*.swp
+*.vi
+*~
+*.psd
+*.zip
+
+# Basics
+*.py[cod]
+__pycache__
+
+# Logs
+*.log
+pip-log.txt
+
+
+# Translations
+*.mo
+*.pot
+
+# Pycharm
+.idea
+
+# Vim
+
+*~
+*.swp
+*.swo
+
+# npm
+node_modules/
+frontend/node_modules/
+
+# Any Build output files
+frontend/dist/**/*
+
+# Compass
+.sass-cache
+
+# for some reson zsh has started putting these everywhere
+.oh-my-zsh
+
+# Misc
+notes.txt
+
+k8s/secrets.yaml
+k8s/secrets-staging.yaml
+
