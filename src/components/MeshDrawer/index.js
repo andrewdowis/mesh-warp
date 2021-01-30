@@ -46,14 +46,14 @@ const MeshDrawer = React.forwardRef((props, ref) => {
     var x4 = 25 + Math.round(Math.random() * (w - 50))
     var y4 = 25 + Math.round(Math.random() * (h - 50))
 
-    x1 = 0
-    y1 = 0
-    x2 = w
-    y2 = 0
-    x3 = 0
-    y3 = h
-    x4 = w
-    y4 = h
+    // x1 = 0
+    // y1 = 0
+    // x2 = w
+    // y2 = 0
+    // x3 = 0
+    // y3 = h
+    // x4 = w
+    // y4 = h
 
     var xm = linearSolution(0, 0, x1, img.width, 0, x2, 0, img.height, x3)
     var ym = linearSolution(0, 0, y1, img.width, 0, y2, 0, img.height, y3)
@@ -107,7 +107,7 @@ const MeshDrawer = React.forwardRef((props, ref) => {
     c.beginPath()
     c.arc(x3, y3, 15, 0, Math.PI * 2, true)
     c.closePath()
-    c.fillStyle = "#0000ff"
+    c.fillStyle = "#00ffff"
     c.fill()
 
     c.beginPath()
@@ -115,6 +115,9 @@ const MeshDrawer = React.forwardRef((props, ref) => {
     c.closePath()
     c.fillStyle = "#ffffff"
     c.fill()
+
+    console.log(`%c drawn`, "color: black; background-color: red; font-style: italic; padding: 2px;")
+    console.log(img)
   }, [canRef])
 
   return <canvas ref={canRef} width={width} height={height} />
