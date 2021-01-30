@@ -1,3 +1,19 @@
 body {
-  background-color: white;
+  background-color: #6c6c6c;
+  color: white;
+}
+
+.canvas-container {
+  position: relative;
+  background-color: #aa0000;
+  width: fit-content;
+}
+canvas {
+  margin-right: 50px;
+  background-color: blue;
+}
+
+img {
+  opacity: 0.5;
+  background-color: black;
 }
