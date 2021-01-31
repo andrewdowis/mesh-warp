@@ -1,0 +1,24 @@
+.grid-item {
+  background-color: rgb(38, 38, 99);
+  position: relative;
+
+  canvas {
+    position: absolute;
+  }
+}
+$dot-size: 20px;
+$dot-size-half: calc(#{$dot-size} / -2);
+.grid-dot {
+  background-color: orangered;
+  position: absolute;
+  width: $dot-size;
+  height: $dot-size;
+  border-radius: $dot-size;
+  // border: 2px solid black;
+  transform: translate($dot-size-half, $dot-size-half);
+  cursor: pointer;
+
+  &:hover {
+    background-color: limegreen;
+  }
+}

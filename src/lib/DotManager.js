@@ -1,3 +1,3 @@
 class DotManager {
-  init() {}
+  init({}) {}
 }
