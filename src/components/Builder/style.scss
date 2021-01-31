@@ -1,0 +1,29 @@
+.builder {
+  background-color: red;
+
+  .guide {
+    background-color: white;
+    display: flex;
+    // align-items: center;
+    justify-content: center;
+    position: relative;
+    // flex-direction: column;
+
+    img {
+      position: absolute;
+    }
+
+    .canvas-holder {
+      opacity: 0.5;
+      position: absolute;
+      top: 100px;
+      background-color: blue;
+      min-width: 200px;
+      min-height: 200px;
+
+      .canvas {
+        background-color: green;
+      }
+    }
+  }
+}

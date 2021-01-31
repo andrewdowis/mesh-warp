@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState, useReducer } from "react"
+import { Router, Route, Switch, withRouter } from "react-router-dom"
+import history from "./history.js"
 
-import CanvasDrawer from "./components/CanvasDrawer"
-import MeshDrawer from "./components/MeshDrawer"
-import Grid from "./components/Grid"
+import Builder from "./components/Builder"
+// import CanvasDrawer from "./components/CanvasDrawer"
+// import MeshDrawer from "./components/MeshDrawer"
+// import Grid from "./components/Grid"
 
 import "./App.scss"
-import GridManager from "./lib/GridManager"
+// import GridManager from "./lib/GridManager"
 
 export const Actions = {
   MOUSE_DOWN: "mousedown",
@@ -13,168 +16,55 @@ export const Actions = {
   MOUSE_MOVE: "mousemove",
 }
 
+/*
+
+MAIN COMP:
+  Comp: 1000x1000
+  Guide: 1200x1200
+
+
+RIGHT SOCK:
+  Canvas 1 (lives on main comp):
+    294x971
+      Bitmap Data Drawn into Canvas:
+        x: -4, y: -2
+        590x975
+
+
+
+
+
+
+LEFT SOCK:
+  Canvas 1 (initial warping used in Canvas 2):
+    297x974
+      Bitmap Data Drawn into Canvas:
+        x: -293 (Align.RIGHT), y: -1
+        590x975
+      Guide:
+        487x1140
+  Canvas 2 (lives on main comp, warps Canvas 1):
+    287x940
+
+
+
+
+
+
+*/
+
 export default function App() {
-  const imgUrl = useRef(require("./assets/textures/asset_01a.jpg").default).current
-  const [sock, setSock] = useState()
+  const thing = useRef(2)
 
-  const [rightSource, setRightSource] = useState()
-  const [leftSource, setLeftSource] = useState()
-
-  const sourceRef = useRef()
-  const holderRef = useRef()
-  const [bodyRef, setBody] = useState()
-
-  const [listeners, setListeners] = useState()
-  const [mouseDownPos, setMouseDownPos] = useState()
-  const indexRef = useRef()
-  const [forceUpdate, setForceUpdate] = useState()
-
-  useEffect(() => {
-    if (imgUrl && !sock) {
-      setTimeout(() => {
-        console.log(imgUrl)
-        const img = new Image()
-        img.src = imgUrl
-
-        img.onload = () => {
-          setTimeout(() => {
-            console.log(`%c FUGGIN LOADED`, "color: black; background-color: cyan; font-style: italic; padding: 2px;")
-            console.log(img)
-            setSock(img)
-          }, 200)
-        }
-      }, 200)
-    }
-  }, [imgUrl])
-
-  // useEffect(() => {
-  //   if (sock) {
-  //     setTimeout(() => {
-  //       console.log(`%c sock updated`, "color: black; background-color: orange; font-style: italic; padding: 2px;")
-  //       // 720x1188
-  //       // let holder = document.getElementById("canvas-holder")
-  //       let holder = holderRef.current
-  //       while (holder.childNodes.length) holder.removeChild(holder.childNodes[0])
-
-  //       let { width, height } = sock
-  //       let can_width = width
-  //       let can_height = height
-  //       let asset_height = height
-
-  //       let socks = ["right", "left"]
-
-  //       socks.forEach((id, i) => {
-  //         let x = 0
-  //         let y = 0
-
-  //         let canvas_item = document.createElement("canvas")
-  //         canvas_item.id = `dummy_canvas_${id}`
-
-  //         switch (id) {
-  //           case "right":
-  //             can_width = 294
-  //             can_height = 971
-
-  //             asset_height = 975
-  //             x = -4
-  //             y = -2
-
-  //             break
-  //           case "left":
-  //             can_width = 297
-  //             can_height = asset_height = 974
-  //             break
-  //           default:
-  //             break
-  //         }
-
-  //         let asset_ratio = height / asset_height
-
-  //         if (id == "left") x = -width / asset_ratio + can_width
-
-  //         canvas_item.width = can_width * asset_ratio
-  //         canvas_item.height = can_height * asset_ratio
-  //         canvas_item
-  //           .getContext("2d")
-  //           .drawImage(sock, x * asset_ratio, y * asset_ratio, width, asset_height * asset_ratio)
-  //         holder.appendChild(canvas_item)
-
-  //         switch (id) {
-  //           case "right":
-  //             setRightSource(canvas_item)
-  //             break
-  //           case "left":
-  //             setLeftSource(canvas_item)
-  //             break
-  //           default:
-  //             break
-  //         }
-  //       })
-  //     }, 200)
-  //   }
-  // }, [sock])
-
-  // useEffect(() => {
-  //   if (leftSource && rightSource) {
-  //     console.log(`%c saucy`, "color: black; background-color: cyan; font-style: italic; padding: 2px;")
-  //     console.log(leftSource)
-  //     console.log(rightSource)
-  //     console.warn("sources!!!!!!")
-  //   }
-  // }, [leftSource, rightSource])
-
-  useEffect(() => {
-    if (!bodyRef) {
-      setBody(document.getElementsByTagName("body")[0])
-    }
-  }, [bodyRef])
-
-  function handleMouseEvent(event, index) {
-    // console.warn("MOUSE EVENT THING", event.type)
-    switch (event.type) {
-      case Actions.MOUSE_DOWN:
-        bodyRef.addEventListener(Actions.MOUSE_MOVE, handleMouseEvent, false)
-        bodyRef.addEventListener(Actions.MOUSE_UP, handleMouseEvent, false)
-        setMouseDownPos(index)
-        indexRef.current = index
-        break
-      case Actions.MOUSE_UP:
-        bodyRef.removeEventListener(Actions.MOUSE_MOVE, handleMouseEvent, false)
-        bodyRef.removeEventListener(Actions.MOUSE_UP, handleMouseEvent, false)
-
-        break
-      case Actions.MOUSE_MOVE:
-        // console.log(mouseDownPos, indexRef.current)
-        GridManager.updateDot(indexRef.current, event.pageX, event.pageY)
-        setForceUpdate(Math.random())
-        // console.log(
-        //   `%c  rollin rollin rollin`,
-        //   "color: black; background-color: cyan; font-style: italic; padding: 2px;"
-        // )
-        break
-      default:
-        break
-    }
+  function no() {
+    return "nope"
   }
 
   return (
-    <div>
-      <div> nuh uh buddy</div>
-      {sock && <Grid src={sock} width={sock.width} height={sock.height} dispatch={handleMouseEvent} />}
-      {/* {sock && (
-        <div ref={holderRef} className="canvas-container">
-          <CanvasDrawer right={true} img={sock} width={sock.width / 2} height={sock.height} />
-          <CanvasDrawer ref={sourceRef} img={sock} width={sock.width / 2} height={sock.height} />
-          {leftSource && rightSource && (
-            <>
-              <MeshDrawer src={rightSource} />
-              <MeshDrawer src={leftSource} />
-            </>
-          )}
-
-          <img alt="skin" src={sock.src} />
-        </div>
-      )} */}
-    </div>
+    <Router history={history}>
+      <Switch>
+        <Route path="" component={Builder} />
+      </Switch>
+    </Router>
   )
 }
