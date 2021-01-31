@@ -217,12 +217,8 @@ const Grid = React.forwardRef((props, ref) => {
           return (
             <div
               onMouseDown={event => {
-                dispatch(event, index)
-                // GridManager.positions[index] = {
-                //   x: Math.random() * width,
-                //   y: Math.random() * height,
-                // }
-                // setForceUpdate(Math.random())
+                console.log("MOUSE DOWN YO")
+                // dispatch(event, index)
               }}
               key={`dot_${index}`}
               className="grid-dot"

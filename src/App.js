@@ -6,6 +6,7 @@ import Builder from "./components/Builder"
 // import CanvasDrawer from "./components/CanvasDrawer"
 // import MeshDrawer from "./components/MeshDrawer"
 // import Grid from "./components/Grid"
+import CanvasDummyBuilder from "./lib/CanvasDummyBuilder"
 
 import "./App.scss"
 // import GridManager from "./lib/GridManager"
@@ -54,16 +55,45 @@ LEFT SOCK:
 */
 
 export default function App() {
-  const thing = useRef(2)
+  const imgUrl = require("./assets/textures/asset_01a.jpg").default
+  const [sourceBitmapData, setSourceBitmapData] = useState()
 
-  function no() {
-    return "nope"
-  }
+  const canvasHolder = useRef()
+
+  useEffect(() => {
+    if (!sourceBitmapData) {
+      const img = new Image()
+      img.src = imgUrl
+
+      img.onload = () => {
+        console.log(`%c  crap loaded`, "color: black; background-color: cyan; font-style: italic; padding: 2px;")
+        console.log(img)
+        setSourceBitmapData(img)
+        CanvasDummyBuilder.init(img)
+
+        // while (canvasHolder.current.childNodes.length)
+        //   canvasHolder.current.removeChild(canvasHolder.current.childNodes[0])
+
+        // CanvasDummyBuilder.dummies.forEach(dum => {
+        //   canvasHolder.current.appendChild(dum.canvas)
+        //   dum.canvas.style.backgroundColor = "lime"
+        // })
+      }
+    }
+  }, [sourceBitmapData])
+
+  // return (
+  //   <div>
+  //     <div ref={canvasHolder} />
+  //   </div>
+  // )
+
+  if (!sourceBitmapData) return <div>give your nuts a tug, ta tit fucker</div>
 
   return (
     <Router history={history}>
       <Switch>
-        <Route path="" component={Builder} />
+        <Route path="" render={props => <Builder sourceBitmapData={sourceBitmapData} />} />
       </Switch>
     </Router>
   )

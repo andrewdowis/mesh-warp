@@ -1,3 +1,5 @@
+import MeshCanvas from "./MeshCanvas"
+
 export default class CanvasDummy {
   init(props) {
     const { width, height, image, id } = props
@@ -5,26 +7,35 @@ export default class CanvasDummy {
 
     this.canvas = document.createElement("canvas")
     this.canvas.id = `dummy_canvas_${id}`
+    this.id = id
 
     this.canvas.width = width
     this.canvas.height = height
 
     const ctx = this.canvas.getContext("2d")
-    console.warn("CANVAS")
-    console.log(this.canvas)
-    console.log(image)
+
     this.values = [src, x || 0, y || 0, image_width || src.width, image_height || src.height]
+
+    this.parent = src
+
     ctx.drawImage(...this.values)
-    console.log(src)
-    console.log(`%c  DONE DRAWING`, "color: black; background-color: yellow; font-style: italic; padding: 2px;")
 
     // document.getElementsByTagName("body").appendChild(canvas)
   }
 
+  initMesh(gridManager) {
+    console.log(`%c init mesh`, "color: black; background-color: orange; font-style: italic; padding: 2px;")
+
+    const meshCanvas = new MeshCanvas()
+    meshCanvas.init(this.canvas.width, this.canvas.height, this.parent, gridManager)
+
+    console.log("MAIDE")
+    console.warn(meshCanvas)
+
+    return meshCanvas
+  }
+
   refresh() {
-    console.clear()
-    console.warn("VALUES")
-    console.log(...this.values)
     this.canvas.getContext("2d").drawImage(...this.values)
   }
 }
