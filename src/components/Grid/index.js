@@ -199,42 +199,148 @@ const Grid = React.forwardRef((props, ref) => {
       updateMeshLines()
     }
   })
-
   if (!isBuilt) return null
 
   return (
-    <div
-      className="grid-item"
-      style={{
-        width,
-        height,
-        // marginLeft: 200,
-      }}
-    >
-      <canvas ref={imageRef} width={width} height={height} />
-      <canvas ref={meshRef} width={width} height={height} />
+    <>
+      <div
+        className="grid-item"
+        style={{
+          width,
+          height,
+          // marginLeft: 200,
+        }}
+      >
+        <canvas ref={imageRef} width={width} height={height} />
+        <canvas ref={meshRef} width={width} height={height} />
+        {GridManager.positions.map((coord, index) => {
+          return (
+            <div
+              onMouseDown={event => {
+                dispatch(event, index)
+                // GridManager.positions[index] = {
+                //   x: Math.random() * width,
+                //   y: Math.random() * height,
+                // }
+                // setForceUpdate(Math.random())
+              }}
+              key={`dot_${index}`}
+              className="grid-dot"
+              style={{
+                left: coord.x,
+                top: coord.y,
+              }}
+            />
+          )
+        })}
+      </div>
+      <div
+        className="button"
+        onClick={() => {
+          console.clear()
 
-      {GridManager.positions.map((coord, index) => {
-        return (
-          <div
-            onMouseDown={event => {
-              dispatch(event, index)
-              // GridManager.positions[index] = {
-              //   x: Math.random() * width,
-              //   y: Math.random() * height,
-              // }
-              // setForceUpdate(Math.random())
-            }}
-            key={`dot_${index}`}
-            className="grid-dot"
-            style={{
-              left: coord.x,
-              top: coord.y,
-            }}
-          />
-        )
-      })}
-    </div>
+          console.log(`%c Save points`, "color: black; background-color: lime; font-style: italic; padding: 2px;")
+
+          const attributes = ["width", "height", "columns", "rows"]
+          let output = "{ positions: ["
+          GridManager.positions.forEach((coord, index) => {
+            output += `{ x: ${coord.x}, y: ${coord.y} }`
+            if (GridManager.positions[index + 1]) output += ", "
+          })
+
+          output += "]"
+          attributes.forEach(attribute => {
+            output += `, ${attribute}: ${GridManager[attribute]}`
+          })
+          // width: ${GridManager.width}, height: ${GridManager.height}, width: ${GridManager.width}, height: ${GridManager.height},  `
+          console.log(GridManager.positions)
+          console.log(output)
+        }}
+      >
+        <p>Output Points</p>
+      </div>
+      {/* <div
+        className="button"
+        onClick={() => {
+          console.clear()
+
+          const getCol = index => {
+            console.warn(`getCol.given ... ${index}`)
+            const answer = index % (GridManager.columns + 1)
+            console.log(`\t\t ${answer}`)
+            return answer
+          }
+          const getRow = index => {
+            console.warn(`getRow.given ... ${index}`)
+            const answer = Math.floor(index / (GridManager.columns + 1))
+            console.log(`\t\t ${answer}`)
+            return answer
+          }
+
+          console.log(`%c Double points`, "color: black; background-color: lime; font-style: italic; padding: 2px;")
+          const inserts = []
+
+          for (let i = 0; i < GridManager.positions.length; i++) {
+            // for (let i = 0; i < 4; i++) {
+            // if (i) break
+
+            const target = GridManager.positions[i]
+            const rightIndex = i + 1
+            const upperIndex = i - (GridManager.columns + 1)
+
+            const right = GridManager.positions[rightIndex]
+            const upper = GridManager.positions[upperIndex]
+
+            const targetCol = getCol(i)
+            const targetRow = getRow(i)
+
+            if (right) {
+              const neighborCol = getCol(rightIndex)
+              const neighborRow = getRow(rightIndex)
+
+              if (targetRow === neighborRow) {
+                inserts.push({
+                  x: (target.x + right.x) / 2,
+                  y: (target.y + right.y) / 2,
+                })
+              }
+            }
+            if (upper) {
+              const neighborCol = getCol(upperIndex)
+              const neighborRow = getRow(upperIndex)
+
+              if (targetCol === targetCol) {
+                inserts.push({
+                  x: (target.x + upper.x) / 2,
+                  y: (target.y + upper.y) / 2,
+                })
+              }
+            }
+          }
+
+          console.clear()
+          console.log(GridManager.positions.slice())
+          console.log(inserts.slice())
+          const dummy = []
+          console.log(GridManager.positions.length, inserts.length)
+          while (GridManager.positions.length + inserts.length > 0) {
+            // while (dummy.length < 7) {
+            if (GridManager.positions.length) {
+              console.error("adding from OG")
+              dummy.push(GridManager.positions.shift())
+            }
+            if (inserts.length) {
+              console.warn("\t adding from insert")
+              dummy.push(inserts.shift())
+            }
+          }
+          console.log(dummy)
+          // GridManager.positions = dummy.map(value => value)
+        }}
+      >
+        <p>Double</p>
+      </div> */}
+    </>
   )
 })
 export default Grid
