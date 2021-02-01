@@ -68,6 +68,9 @@ const Builder = React.forwardRef((props, ref) => {
       while (canvasHolder.current.childNodes.length)
         canvasHolder.current.removeChild(canvasHolder.current.childNodes[0])
 
+      console.log("DUMMY IS NOW")
+      console.log(dummy)
+      dummy.refresh()
       canvasHolder.current.appendChild(dummy.meshCanvas.output)
       canvasHolder.current.appendChild(dummy.meshCanvas.wireframe)
     }

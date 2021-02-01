@@ -52,6 +52,7 @@ class CanvasDummyBuilder {
     ]
 
     let prev
+    let prevMesh
     this.meshables = []
 
     this.dummies = canvas_data.map((data, i) => {
@@ -66,11 +67,12 @@ class CanvasDummyBuilder {
       dummy.init(data)
 
       if (data.image.src === prev) {
-        dummy.initMesh()
+        dummy.initMesh(prevMesh)
         this.meshables.push(dummy)
       }
 
-      prev = dummy.canvas
+      prevMesh = dummy
+      prev = dummy.meshCanvas ? dummy.meshCanvas.output : dummy.canvas
 
       return dummy
     })

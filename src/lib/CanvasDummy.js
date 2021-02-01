@@ -25,13 +25,15 @@ export default class CanvasDummy {
     // document.getElementsByTagName("body").appendChild(canvas)
   }
 
-  initMesh() {
+  initMesh(parentDummy) {
     const gridManager = new GridManager()
 
     gridManager.init(this.parent.width, this.parent.height, 5, 5)
 
     this.meshCanvas = new MeshCanvas()
     this.meshCanvas.init(this.canvas.width, this.canvas.height, this.parent, gridManager)
+
+    this.parentDummy = parentDummy
   }
 
   updateDot(index, x, y) {
@@ -40,6 +42,9 @@ export default class CanvasDummy {
   }
 
   refresh() {
-    this.canvas.getContext("2d").drawImage(...this.values)
+    if (this.meshCanvas) this.meshCanvas.update()
+    let ctx = this.canvas.getContext("2d")
+    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+    ctx.drawImage(...this.values)
   }
 }

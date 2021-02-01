@@ -138,7 +138,7 @@ export default class MeshCanvas {
       ctx_output.lineTo(w_x, h_y)
 
       ctx_output.closePath()
-      ctx_output.fillStyle = "purple"
+      ctx_output.fillStyle = "transparent"
       ctx_output.fill()
       ctx_output.clip()
       ctx_output.drawImage(img, rootX, rootY, w_sliced, h_sliced, 0, 0, w_sliced, h_sliced)
@@ -157,6 +157,7 @@ export default class MeshCanvas {
       ctx_output.lineTo(upperX, h_y)
       ctx_output.lineTo(upperX, upperY)
       ctx_output.closePath()
+      ctx_output.fillStyle = "transparent"
       ctx_output.fill()
       ctx_output.clip()
       ctx_output.drawImage(img, rootX, rootY, w_sliced, h_sliced, 0, 0, w_sliced, h_sliced)
