@@ -1,8 +1,10 @@
+import GridManager from "./GridManager"
 import MeshCanvas from "./MeshCanvas"
 
 export default class CanvasDummy {
   init(props) {
     const { width, height, image, id } = props
+
     const { src, x, y, width: image_width, height: image_height } = image
 
     this.canvas = document.createElement("canvas")
@@ -23,16 +25,18 @@ export default class CanvasDummy {
     // document.getElementsByTagName("body").appendChild(canvas)
   }
 
-  initMesh(gridManager) {
-    console.log(`%c init mesh`, "color: black; background-color: orange; font-style: italic; padding: 2px;")
+  initMesh() {
+    const gridManager = new GridManager()
 
-    const meshCanvas = new MeshCanvas()
-    meshCanvas.init(this.canvas.width, this.canvas.height, this.parent, gridManager)
+    gridManager.init(this.parent.width, this.parent.height, 5, 5)
 
-    console.log("MAIDE")
-    console.warn(meshCanvas)
+    this.meshCanvas = new MeshCanvas()
+    this.meshCanvas.init(this.canvas.width, this.canvas.height, this.parent, gridManager)
+  }
 
-    return meshCanvas
+  updateDot(index, x, y) {
+    this.meshCanvas.gridManager.updateDot(index, x, y)
+    this.meshCanvas.update()
   }
 
   refresh() {

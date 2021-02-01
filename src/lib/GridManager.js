@@ -1,7 +1,6 @@
 export default class GridManager {
   init(width, height, rows, columns) {
     if (!this.build) {
-      console.log(`%c GridManager.init()`, "color: black; background-color: orange; font-style: italic; padding: 2px;")
       this.build = true
       this.width = width
       this.height = height
@@ -20,7 +19,6 @@ export default class GridManager {
       this.positions = []
       this.rootPositions = []
 
-      // console.log(columns, rows, total)
       for (let i = 0; i < total; i++) {
         const data = {
           x: (i % columns) * colWidth,
@@ -29,7 +27,6 @@ export default class GridManager {
         this.positions.push(data)
 
         this.rootPositions.push({ ...data })
-        // console.log(i, Math.floor(i / columns), Math.floor(i / rows))
       }
 
       this.grids = []

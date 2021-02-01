@@ -58,7 +58,6 @@ class CanvasDummyBuilder {
       const dummy = new CanvasDummy()
       data.image = data.image || {}
       if (data.image.src) {
-        data.image.src = prev
       } else {
       }
 
@@ -66,7 +65,10 @@ class CanvasDummyBuilder {
 
       dummy.init(data)
 
-      if (data.image.src === prev) this.meshables.push(dummy)
+      if (data.image.src === prev) {
+        dummy.initMesh()
+        this.meshables.push(dummy)
+      }
 
       prev = dummy.canvas
 

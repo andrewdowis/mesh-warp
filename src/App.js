@@ -3,6 +3,7 @@ import { Router, Route, Switch, withRouter } from "react-router-dom"
 import history from "./history.js"
 
 import Builder from "./components/Builder"
+import Preview from "./components/Preview"
 // import CanvasDrawer from "./components/CanvasDrawer"
 // import MeshDrawer from "./components/MeshDrawer"
 // import Grid from "./components/Grid"
@@ -55,30 +56,132 @@ LEFT SOCK:
 */
 
 export default function App() {
-  const imgUrl = require("./assets/textures/asset_01a.jpg").default
+  const [bodyRef, setBody] = useState()
+
+  const dotIndexRef = useRef()
+  const boundingRect = useRef()
+  const mouseDownPos = useRef()
+  const [forceUpdate, setForceUpdate] = useState()
+
+  const assets = [
+    require("./assets/textures/asset_01a.jpg").default,
+    require("./assets/textures/asset_02.jpg").default,
+    require("./assets/textures/asset_03.jpg").default,
+    require("./assets/textures/asset_04.jpg").default,
+  ]
+  const assetData = useRef([])
+
+  const layers = [
+    require("./assets/layers/layer_01.png").default,
+    require("./assets/layers/layer_02_multiply.png").default,
+    require("./assets/layers/layer_03_base.png").default,
+    require("./assets/layers/sock_mask_left.png").default,
+    require("./assets/layers/sock_mask_right.png").default,
+  ]
+  const layerData = useRef([])
+
   const [sourceBitmapData, setSourceBitmapData] = useState()
 
   const canvasHolder = useRef()
 
+  const gridTarget = useRef()
+
+  ////////////////////////////////////////////////////////////
+
+  function handleMouseEvent(event, index, dummyIndex, parent) {
+    event.preventDefault()
+    event.stopPropagation()
+    switch (event.type) {
+      case Actions.MOUSE_DOWN:
+        bodyRef.addEventListener(Actions.MOUSE_MOVE, handleMouseEvent, false)
+        bodyRef.addEventListener(Actions.MOUSE_UP, handleMouseEvent, false)
+        gridTarget.current = dummyIndex
+        dotIndexRef.current = index
+        boundingRect.current = parent.getBoundingClientRect()
+
+        mouseDownPos.current = {
+          x: event.pageX,
+          y: event.pageY,
+        }
+
+        break
+      case Actions.MOUSE_UP:
+        bodyRef.removeEventListener(Actions.MOUSE_MOVE, handleMouseEvent, false)
+        bodyRef.removeEventListener(Actions.MOUSE_UP, handleMouseEvent, false)
+        gridTarget.current = null
+        dotIndexRef.current = null
+        boundingRect.current = null
+        mouseDownPos.current = null
+        break
+      case Actions.MOUSE_MOVE:
+        console.warn(dotIndexRef.current, Infinity)
+
+        const targetMeshable = CanvasDummyBuilder.meshables[gridTarget.current]
+        if (dotIndexRef.current === Infinity) {
+          targetMeshable.meshCanvas.gridManager.positions.forEach((position, i) => {
+            // console.log(i, targetMeshable.updateDot)
+            targetMeshable.updateDot(
+              i,
+              position.x - (mouseDownPos.current.x - event.pageX),
+              position.y - (mouseDownPos.current.y - event.pageY)
+            )
+          })
+          mouseDownPos.current = {
+            x: event.pageX,
+            y: event.pageY,
+          }
+        } else {
+          targetMeshable.updateDot(
+            dotIndexRef.current,
+            event.pageX - boundingRect.current.x,
+            event.pageY - boundingRect.current.y - document.documentElement.scrollTop
+          )
+        }
+        // GridManager.updateDot(dotIndexRef.current, event.pageX, event.pageY)
+        setForceUpdate(Math.random())
+        break
+      default:
+        break
+    }
+  }
+
+  useEffect(() => {
+    if (!bodyRef) {
+      setBody(document.getElementsByTagName("body")[0])
+    }
+  }, [bodyRef])
+
+  ////////////////////////////////////////////////////////////
   useEffect(() => {
     if (!sourceBitmapData) {
-      const img = new Image()
-      img.src = imgUrl
+      let completed = 0
+      function callback() {
+        if (++completed === assets.length + layers.length) {
+          const img = assetData.current[0]
 
-      img.onload = () => {
-        console.log(`%c  crap loaded`, "color: black; background-color: cyan; font-style: italic; padding: 2px;")
-        console.log(img)
-        setSourceBitmapData(img)
-        CanvasDummyBuilder.init(img)
-
-        // while (canvasHolder.current.childNodes.length)
-        //   canvasHolder.current.removeChild(canvasHolder.current.childNodes[0])
-
-        // CanvasDummyBuilder.dummies.forEach(dum => {
-        //   canvasHolder.current.appendChild(dum.canvas)
-        //   dum.canvas.style.backgroundColor = "lime"
-        // })
+          setSourceBitmapData(img)
+          CanvasDummyBuilder.init(img)
+        }
       }
+
+      assets.forEach((url, i) => {
+        const img = new Image()
+        img.src = url
+
+        img.onload = () => {
+          assetData.current[i] = img
+          callback()
+        }
+      })
+      layers.forEach((url, i) => {
+        const img = new Image()
+        img.src = url
+
+        img.onload = () => {
+          layerData.current[i] = img
+          callback()
+        }
+      })
     }
   }, [sourceBitmapData])
 
@@ -88,12 +191,20 @@ export default function App() {
   //   </div>
   // )
 
-  if (!sourceBitmapData) return <div>give your nuts a tug, ta tit fucker</div>
+  if (!sourceBitmapData) return <div>give your nuts a tug, ya tit fucker</div>
 
   return (
     <Router history={history}>
       <Switch>
-        <Route path="" render={props => <Builder sourceBitmapData={sourceBitmapData} />} />
+        {/* <Route path="" render={props => <Preview assetData.current={assetData.current} />} /> */}
+        <Route
+          path=""
+          render={props => {
+            return (
+              <Builder sourceBitmapData={sourceBitmapData} layers={layerData.current} dispatch={handleMouseEvent} />
+            )
+          }}
+        />
       </Switch>
     </Router>
   )

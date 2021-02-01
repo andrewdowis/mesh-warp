@@ -1,0 +1,27 @@
+.preview {
+  .samples {
+    img {
+      max-width: 100px;
+      max-height: 400px;
+      opacity: 0.5;
+
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+
+    .selected {
+      opacity: 1;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
+  canvas {
+    background-color: black;
+  }
+}

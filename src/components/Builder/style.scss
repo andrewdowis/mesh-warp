@@ -1,7 +1,6 @@
 .builder {
-  background-color: red;
-
   .controls {
+    background-color: red;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -32,48 +31,55 @@
       }
     }
   }
-
-  .guide {
-    background-color: white;
+  .holder {
     display: flex;
     // align-items: center;
     justify-content: center;
     position: relative;
     // flex-direction: column;
 
-    img {
-      position: absolute;
-    }
+    .guide {
+      background-color: white;
+      position: relative;
 
-    .canvas-holder {
-      top: 100px;
-      opacity: 0.5;
-      position: absolute;
-      background-color: blue;
+      .canvas-holder {
+        top: 100px;
+        left: 100px;
 
-      .canvas {
-        background-color: green;
-      }
-    }
-
-    .dots-holder {
-      top: 100px;
-      position: absolute;
-
-      $dot-size: 20px;
-      $dot-size-half: calc(#{$dot-size} / -2);
-      .grid-dot {
-        background-color: orangered;
         position: absolute;
-        width: $dot-size;
-        height: $dot-size;
-        border-radius: $dot-size;
-        // border: 2px solid black;
-        transform: translate($dot-size-half, $dot-size-half);
-        cursor: pointer;
+        background-color: blue;
 
-        &:hover {
-          background-color: limegreen;
+        canvas {
+          position: absolute;
+        }
+      }
+
+      .dots-holder {
+        top: 100px;
+        left: 100px;
+        position: absolute;
+
+        $border-size: 6px;
+        $offset-border-size: calc(#{$border-size} / -1);
+        $dot-size: 20px;
+        $offset-dot-size: calc(#{$dot-size} / -2);
+
+        $offset: calc(#{$offset-dot-size} + #{$offset-border-size});
+
+        .grid-dot {
+          // background-color: orangered;
+          position: absolute;
+          width: $dot-size;
+          height: $dot-size;
+          border-radius: $dot-size;
+          border: $border-size solid orangered;
+          transform: translate($offset, $offset);
+          cursor: pointer;
+
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+            border-color: limegreen;
+          }
         }
       }
     }
