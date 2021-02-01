@@ -23,7 +23,6 @@ const Grid = React.forwardRef((props, ref) => {
         columns: 3,
       })
 
-      console.clear()
       setIsBuilt(true)
     }
   }, [isBuilt])
@@ -233,8 +232,6 @@ const Grid = React.forwardRef((props, ref) => {
       <div
         className="button"
         onClick={() => {
-          console.clear()
-
           console.log(`%c Save points`, "color: black; background-color: lime; font-style: italic; padding: 2px;")
 
           const attributes = ["width", "height", "columns", "rows"]
@@ -258,7 +255,7 @@ const Grid = React.forwardRef((props, ref) => {
       {/* <div
         className="button"
         onClick={() => {
-          console.clear()
+
 
           const getCol = index => {
             console.warn(`getCol.given ... ${index}`)
@@ -314,7 +311,7 @@ const Grid = React.forwardRef((props, ref) => {
             }
           }
 
-          console.clear()
+
           console.log(GridManager.positions.slice())
           console.log(inserts.slice())
           const dummy = []

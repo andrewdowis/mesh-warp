@@ -12,9 +12,6 @@ export default class MeshCanvas {
     this.wireframe.width = width
     this.wireframe.height = height
 
-    const ctx_output = this.output.getContext("2d")
-    const ctx_wireframe = this.wireframe.getContext("2d")
-
     this.src = image
 
     this.gridManager = gridManager
@@ -131,12 +128,10 @@ export default class MeshCanvas {
       ctx_output.save()
       ctx_output.setTransform(xn[0], yn[0], xn[1], yn[1], xn[2], yn[2])
       ctx_output.beginPath()
-
       ctx_output.moveTo(w_x, h_y)
       ctx_output.lineTo(w_x, upperY)
       ctx_output.lineTo(upperX, h_y)
       ctx_output.lineTo(w_x, h_y)
-
       ctx_output.closePath()
       ctx_output.fillStyle = "transparent"
       ctx_output.fill()

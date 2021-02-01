@@ -1,5 +1,7 @@
 import CanvasDummy from "./CanvasDummy"
 
+import right_sock from "../data/right_sock.json"
+
 class CanvasDummyBuilder {
   init(src) {
     const canvas_data = [
@@ -19,6 +21,7 @@ class CanvasDummyBuilder {
         width: 1000,
         height: 1000,
         image: { src: "right_sock_source" },
+        data: right_sock,
       },
       {
         id: "left_sock_source",
@@ -67,7 +70,7 @@ class CanvasDummyBuilder {
       dummy.init(data)
 
       if (data.image.src === prev) {
-        dummy.initMesh(prevMesh)
+        dummy.initMesh(data.data)
         this.meshables.push(dummy)
       }
 
