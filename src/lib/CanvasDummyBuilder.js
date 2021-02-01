@@ -55,26 +55,24 @@ class CanvasDummyBuilder {
     ]
 
     let prev
-    let prevMesh
     this.meshables = []
 
-    this.dummies = canvas_data.map((data, i) => {
+    this.dummies = canvas_data.map((obj, i) => {
       const dummy = new CanvasDummy()
-      data.image = data.image || {}
-      if (data.image.src) {
+      obj.image = obj.image || {}
+      if (obj.image.src) {
       } else {
       }
 
-      data.image.src = data.image.src ? prev : src
+      obj.image.src = obj.image.src ? prev : src
 
-      dummy.init(data)
+      dummy.init(obj)
 
-      if (data.image.src === prev) {
-        dummy.initMesh(data.data)
+      if (obj.image.src === prev) {
+        dummy.initMesh(obj.data)
         this.meshables.push(dummy)
       }
 
-      prevMesh = dummy
       prev = dummy.meshCanvas ? dummy.meshCanvas.output : dummy.canvas
 
       return dummy

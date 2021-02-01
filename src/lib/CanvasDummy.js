@@ -40,6 +40,9 @@ export default class CanvasDummy {
     this.meshCanvas = new MeshCanvas()
     this.meshCanvas.init(this.canvas.width, this.canvas.height, this.parent, gridManager)
 
+    this.canvas = null
+    delete this.canvas
+
     // this.parentDummy = parentDummy
   }
 

@@ -114,8 +114,6 @@ export default function App() {
         mouseDownPos.current = null
         break
       case Actions.MOUSE_MOVE:
-        console.warn(dotIndexRef.current, Infinity)
-
         const targetMeshable = CanvasDummyBuilder.meshables[gridTarget.current]
         if (dotIndexRef.current === Infinity) {
           targetMeshable.meshCanvas.gridManager.positions.forEach((position, i) => {
