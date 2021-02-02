@@ -8,7 +8,7 @@ import "./style.scss"
 import { Actions } from "../../App"
 
 const Builder = React.forwardRef((props, ref) => {
-  const { sourceBitmapData, layers, dispatch } = props
+  const { sourceBitmapData, dispatch } = props
 
   const guideRight = require("../../assets/guides/guide_right_01.jpg").default
   const guideLeft01 = require("../../assets/guides/guide_left_01.jpg").default
@@ -32,17 +32,17 @@ const Builder = React.forwardRef((props, ref) => {
       let completed = 0
       function callback() {
         if (++completed === images.length) {
-          if (CanvasDummyBuilder.meshables[0].parent) {
-            // gridItems.current = CanvasDummyBuilder.meshables.map((dummy, i) => {
-            //   const gridManager = new GridManager()
-            //   const { parent } = dummy
-            //   gridManager.init(parent.width, parent.height, 2, 2)
-            //   CanvasDummyBuilder.meshables[i] = dummy.initMesh(gridManager)
-            //   return gridManager
-            // })
-          }
+          // if (CanvasDummyBuilder.meshables[0].parent) {
+          // gridItems.current = CanvasDummyBuilder.meshables.map((dummy, i) => {
+          //   const gridManager = new GridManager()
+          //   const { parent } = dummy
+          //   gridManager.init(parent.width, parent.height, 2, 2)
+          //   CanvasDummyBuilder.meshables[i] = dummy.initMesh(gridManager)
+          //   return gridManager
+          // })
+          // }
 
-          setDummyIndex(0)
+          setDummyIndex(2)
         }
       }
 
@@ -78,8 +78,70 @@ const Builder = React.forwardRef((props, ref) => {
 
   if (!dummy) return null
 
+  // function getControls(type) {
+  //   const number = dummy.meshCanvas.gridManager[type]
+  //   const dummies
+  //   switch (type) {
+  //     case "columns":
+  //       return <div className="controls-column"></div>
+  //       break
+  //   }
+  // }
+
   return (
     <div className="builder">
+      <div className="holder">
+        <div
+          className="guide"
+          style={{
+            width: dummy.meshCanvas.output.width + 200,
+            height: dummy.meshCanvas.output.height + 200,
+          }}
+        >
+          <img draggable={false} src={bitmapData[dummyIndex].src} alt={`guide`} />
+          <div
+            className="canvas-holder"
+            ref={canvasHolder}
+            style={{
+              opacity,
+            }}
+          ></div>
+          <div
+            ref={dotsHolder}
+            id="dots-holder"
+            className="dots-holder"
+            onMouseDown={event => {
+              dispatch(event, Infinity, dummyIndex, dotsHolder.current)
+            }}
+            style={{
+              width: dummy.meshCanvas.output.width,
+              height: dummy.meshCanvas.output.height,
+            }}
+          >
+            {/* <div className="controls">{getControls("columns")}</div> */}
+            {/* <div> */}
+            {dummy.meshCanvas.gridManager.positions.map((coord, index) => {
+              return (
+                <div
+                  onMouseDown={event => {
+                    dispatch(event, index, dummyIndex, dotsHolder.current)
+                  }}
+                  key={`dot_${index}`}
+                  className="grid-dot"
+                  style={{
+                    left: coord.x,
+                    top: coord.y,
+                  }}
+                >
+                  <div className="cross-01" />
+                  <div className="cross-02" />
+                </div>
+              )
+            })}
+            {/* </div> */}
+          </div>
+        </div>
+      </div>
       <div className="controls">
         <div className="button-holder">
           <div>THESE ARE THE DUMMIES</div>
@@ -110,7 +172,7 @@ const Builder = React.forwardRef((props, ref) => {
           <div
             className="button"
             onClick={() => {
-              setOpacity(opacity === 1 ? 0.5 : 1)
+              setOpacity(opacity === 1 ? 0.55 : 1)
             }}
           >
             <p>Toggle Transparency</p>
@@ -120,6 +182,7 @@ const Builder = React.forwardRef((props, ref) => {
           <div
             className="button"
             onClick={() => {
+              console.clear()
               const attributes = ["width", "height", "columns", "rows"]
               let output = `{ `
               const gm = dummy.meshCanvas.gridManager
@@ -145,52 +208,6 @@ const Builder = React.forwardRef((props, ref) => {
             }}
           >
             <p>Output Points</p>
-          </div>
-        </div>
-      </div>
-      <div className="holder">
-        <div
-          className="guide"
-          style={{
-            width: dummy.meshCanvas.output.width + 200,
-            height: dummy.meshCanvas.output.height + 200,
-          }}
-        >
-          <img draggable={false} src={bitmapData[dummyIndex].src} alt={`guide`} />
-          <div
-            className="canvas-holder"
-            ref={canvasHolder}
-            style={{
-              opacity,
-            }}
-          ></div>
-          <div
-            ref={dotsHolder}
-            id="dots-holder"
-            className="dots-holder"
-            onMouseDown={event => {
-              dispatch(event, Infinity, dummyIndex, dotsHolder.current)
-            }}
-            style={{
-              width: dummy.meshCanvas.output.width,
-              height: dummy.meshCanvas.output.height,
-            }}
-          >
-            {dummy.meshCanvas.gridManager.positions.map((coord, index) => {
-              return (
-                <div
-                  onMouseDown={event => {
-                    dispatch(event, index, dummyIndex, dotsHolder.current)
-                  }}
-                  key={`dot_${index}`}
-                  className="grid-dot"
-                  style={{
-                    left: coord.x,
-                    top: coord.y,
-                  }}
-                />
-              )
-            })}
           </div>
         </div>
       </div>

@@ -29,8 +29,6 @@ export default class GridManager {
 
           this.rootPositions.push({ ...data })
         }
-      } else {
-        console.log(`%c DONNYBROOK`, "color: black; background-color: cyan; font-style: italic; padding: 2px;")
       }
 
       this.grids = []

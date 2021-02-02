@@ -64,10 +64,13 @@ export default function App() {
   const [forceUpdate, setForceUpdate] = useState()
 
   const assets = [
-    require("./assets/textures/asset_01a.jpg").default,
+    require("./assets/textures/asset_01.jpg").default,
     require("./assets/textures/asset_02.jpg").default,
     require("./assets/textures/asset_03.jpg").default,
     require("./assets/textures/asset_04.jpg").default,
+    require("./assets/textures/asset_looney2.jpg").default,
+    require("./assets/textures/asset_bp2.jpg").default,
+    require("./assets/textures/asset_tmnt2.jpg").default,
   ]
   const assetData = useRef([])
 
@@ -79,6 +82,8 @@ export default function App() {
     require("./assets/layers/sock_mask_right.png").default,
   ]
   const layerData = useRef([])
+
+  // const whatever = useRef()
 
   const [sourceBitmapData, setSourceBitmapData] = useState()
 
@@ -189,18 +194,17 @@ export default function App() {
   //   </div>
   // )
 
-  if (!sourceBitmapData) return <div>give your nuts a tug, ya tit fucker</div>
+  if (!sourceBitmapData) return <div>LOADING!</div>
 
+  // return <div ref={whatever} />
   return (
     <Router history={history}>
       <Switch>
-        {/* <Route path="" render={props => <Preview assetData.current={assetData.current} />} /> */}
+        <Route path="" render={props => <Preview thumbs={assetData.current} layers={layerData.current} />} />
         <Route
-          path=""
+          path="/admin"
           render={props => {
-            return (
-              <Builder sourceBitmapData={sourceBitmapData} layers={layerData.current} dispatch={handleMouseEvent} />
-            )
+            return <Builder sourceBitmapData={sourceBitmapData} dispatch={handleMouseEvent} />
           }}
         />
       </Switch>

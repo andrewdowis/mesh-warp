@@ -43,23 +43,23 @@ export default class MeshCanvas {
       ctx_wireframe.closePath()
     }
 
-    ctx_wireframe.strokeStyle = "red"
-    ctx_wireframe.lineWidth = 0.5
-    for (let i = 0; i < this.gridManager.positions.length; i++) {
-      if (i % (this.gridManager.columns + 1) === 0) continue
+    // ctx_wireframe.strokeStyle = "red"
+    // ctx_wireframe.lineWidth = 0.5
+    // for (let i = 0; i < this.gridManager.positions.length; i++) {
+    //   if (i % (this.gridManager.columns + 1) === 0) continue
 
-      const coord = this.gridManager.positions[i]
-      let neighbor = this.gridManager.positions[i + this.gridManager.columns]
+    //   const coord = this.gridManager.positions[i]
+    //   let neighbor = this.gridManager.positions[i + this.gridManager.columns]
 
-      if (!neighbor) break
+    //   if (!neighbor) break
 
-      ctx_wireframe.beginPath()
-      ctx_wireframe.moveTo(coord.x, coord.y)
-      ctx_wireframe.lineTo(neighbor.x, neighbor.y)
+    //   ctx_wireframe.beginPath()
+    //   ctx_wireframe.moveTo(coord.x, coord.y)
+    //   ctx_wireframe.lineTo(neighbor.x, neighbor.y)
 
-      ctx_wireframe.stroke()
-      ctx_wireframe.closePath()
-    }
+    //   ctx_wireframe.stroke()
+    //   ctx_wireframe.closePath()
+    // }
   }
 
   linearSolution(r1, s1, t1, r2, s2, t2, r3, s3, t3) {

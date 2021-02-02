@@ -1,6 +1,8 @@
 import CanvasDummy from "./CanvasDummy"
 
 import right_sock from "../data/right_sock.json"
+import left_sock_01 from "../data/left_sock_01.json"
+import left_sock_02 from "../data/left_sock_02.json"
 
 class CanvasDummyBuilder {
   init(src) {
@@ -45,12 +47,14 @@ class CanvasDummyBuilder {
           height: 974,
           src: "left_sock_source",
         },
+        data: left_sock_01,
       },
       {
         id: "left_sock_target_02",
         width: 1000,
         height: 1000,
         image: { src: "left_sock_target_01" },
+        data: left_sock_02,
       },
     ]
 
@@ -64,12 +68,14 @@ class CanvasDummyBuilder {
       } else {
       }
 
-      obj.image.src = obj.image.src ? prev : src
+      const addMesh = obj.image.src || false
+      obj.image.src = addMesh ? prev : src
+
+      if (addMesh) obj.mesh = addMesh
 
       dummy.init(obj)
 
       if (obj.image.src === prev) {
-        dummy.initMesh(obj.data)
         this.meshables.push(dummy)
       }
 
@@ -79,6 +85,21 @@ class CanvasDummyBuilder {
     })
 
     // throw new Error("STOP")
+  }
+
+  refresh(img) {
+    const non_meshy = this.dummies.filter(dummy => {
+      return !dummy.meshCanvas
+    })
+
+    non_meshy.forEach((dummy, i) => {
+      dummy.values[0] = img
+      dummy.refresh()
+    })
+
+    this.meshables.forEach((dummy, i) => {
+      dummy.refresh()
+    })
   }
 }
 
