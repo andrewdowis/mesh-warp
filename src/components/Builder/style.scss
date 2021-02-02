@@ -63,20 +63,23 @@
         left: 100px;
         position: absolute;
 
-        $border-size: 6px;
+        $border-size: 3px;
         $offset-border-size: calc(#{$border-size} / -1);
-        $dot-size: 20px;
+        $dot-size: 5px;
         $offset-dot-size: calc(#{$dot-size} / -2);
-
         $offset: calc(#{$offset-dot-size} + #{$offset-border-size});
 
+        $border-size-hover: 6px;
+        $offset-border-size-hover: calc(#{$border-size-hover} / -1);
+        $dot-size-hover: 20px;
+        $offset-dot-size-hover: calc(#{$dot-size-hover} / -2);
+        $offset-hover: calc(#{$offset-dot-size-hover} + #{$offset-border-size-hover});
         .grid-dot {
-          // background-color: orangered;
           position: absolute;
+          border: $border-size solid orangered;
           width: $dot-size;
           height: $dot-size;
           border-radius: $dot-size;
-          border: $border-size solid orangered;
           transform: translate($offset, $offset);
           cursor: pointer;
 
@@ -99,7 +102,11 @@
 
           &:hover {
             background-color: rgba(255, 255, 255, 0.5);
-            border-color: limegreen;
+            border: $border-size-hover solid limegreen;
+            width: $dot-size-hover;
+            height: $dot-size-hover;
+            border-radius: $dot-size-hover;
+            transform: translate($offset-hover, $offset-hover);
           }
         }
       }

@@ -200,13 +200,18 @@ export default function App() {
   return (
     <Router history={history}>
       <Switch>
+        {["/dev/rock2d/#/admin", "/dev/rock2d/admin", "/#/admin", "/admin"].map((path, i) => {
+          return (
+            <Route
+              key={`route_${i}`}
+              path={path}
+              render={props => {
+                return <Builder sourceBitmapData={sourceBitmapData} dispatch={handleMouseEvent} />
+              }}
+            />
+          )
+        })}
         <Route path="" render={props => <Preview thumbs={assetData.current} layers={layerData.current} />} />
-        <Route
-          path="/admin"
-          render={props => {
-            return <Builder sourceBitmapData={sourceBitmapData} dispatch={handleMouseEvent} />
-          }}
-        />
       </Switch>
     </Router>
   )

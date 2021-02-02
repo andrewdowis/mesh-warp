@@ -34,8 +34,8 @@ export default class CanvasDummy {
     data = data || {
       width: this.parent.width,
       height: this.parent.height,
-      columns: 5,
-      rows: 6,
+      columns: 10,
+      rows: 12,
     }
 
     gridManager.init(data)
