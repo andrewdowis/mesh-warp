@@ -48,7 +48,6 @@ export default class CanvasDummy {
   }
 
   doublePoints(newPositions) {
-    console.log(this.meshCanvas)
     this.meshCanvas.doublePoints(newPositions)
     this.refresh()
   }

@@ -100,7 +100,6 @@ export default class MeshCanvas {
     const rewind_amount = columns + 1
     const skip_amount = rewind_amount * rows - 1
     for (let i = target; i > -1; i -= rewind_amount) {
-      // console.log(i, Math.random())
       const c1 = gm.positions[i]
       const c2 = gm.positions[i + 1]
       const c3 = gm.positions[i + 1 + columns]

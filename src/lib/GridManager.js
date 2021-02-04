@@ -73,13 +73,6 @@ export default class GridManager {
         this.rootPositions.push(data)
       }
     }
-
-    console.warn("new positions")
-    console.log(this.positions)
-    console.warn("new roots")
-    console.log(this.rootPositions)
-
-    // throw new Error("STOP")
   }
 
   updateDot(index, x, y) {
