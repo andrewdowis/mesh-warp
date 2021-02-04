@@ -8,6 +8,7 @@
     height: 100vh;
     position: fixed;
     top: 0px;
+    right: 0px;
 
     .button-holder {
       background-color: pink;
@@ -82,6 +83,13 @@
           border-radius: $dot-size;
           transform: translate($offset, $offset);
           cursor: pointer;
+
+          p {
+            position: relative;
+            font-size: 3em;
+            color: black;
+            transform: translate($offset, $offset);
+          }
 
           div {
             background-color: black;

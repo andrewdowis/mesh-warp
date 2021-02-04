@@ -26,8 +26,6 @@ const Builder = React.forwardRef((props, ref) => {
 
   const gridItems = useRef([]).current
 
-  const [forceUpdate, setForceUpdate] = useState()
-
   const canvasHolder = useRef()
   const dotsHolder = useRef()
 
@@ -72,6 +70,8 @@ const Builder = React.forwardRef((props, ref) => {
       while (canvasHolder.current.childNodes.length)
         canvasHolder.current.removeChild(canvasHolder.current.childNodes[0])
 
+      console.log("DUMMY IS NOW")
+      console.log(dummy)
       dummy.refresh()
       canvasHolder.current.appendChild(dummy.meshCanvas.output)
       canvasHolder.current.appendChild(dummy.meshCanvas.wireframe)
@@ -79,6 +79,7 @@ const Builder = React.forwardRef((props, ref) => {
   }, [dummy])
 
   useEffect(() => {
+    console.log(`%c  ${wireframeOpacity}`, "color: black; background-color: cyan; font-style: italic; padding: 2px;")
     if (dummy) {
       dummy.meshCanvas.wireframe.style.opacity = wireframeOpacity
     }
@@ -144,7 +145,7 @@ const Builder = React.forwardRef((props, ref) => {
                   >
                     <div className="cross-01" />
                     <div className="cross-02" />
-                    {/* <p>{index}</p> */}
+                    <p>{index}</p>
                   </div>
                 )
               })}
@@ -214,10 +215,9 @@ const Builder = React.forwardRef((props, ref) => {
             className="button"
             onClick={() => {
               console.clear()
+              console.warn("Doubling points")
               const gm = dummy.meshCanvas.gridManager
               const columns = gm.columns + 1
-              console.warn("DOUBLING UP", columns)
-              const new_00 = gm.positions.map((pos, i) => pos)
               const new_01 = []
               const new_02 = []
               const new_03 = []
@@ -225,92 +225,92 @@ const Builder = React.forwardRef((props, ref) => {
               let additional = 0
               let balls = 0
               const final = []
-
-              function getAverage(...indexes) {
-                console.log(indexes)
-                let x = 0
-                let y = 0
-                indexes.forEach(index => {
-                  console.warn("index is", index)
-                  x += gm.positions[index].x
-                  y += gm.positions[index].y
-                })
-                x /= indexes.length
-                y /= indexes.length
-
-                console.log("RETURNING")
-                console.log({ x, y })
-                console.log("")
-                return { x, y }
-              }
-
-              // console.warn(getAverage({ x: 0, y: 0 }, { x: 2, y: 2 }))
-              // console.warn(getAverage({ x: 0, y: 0 }, { x: 2, y: 2 }, { x: 10, y: 10 }, { x: 20, y: 20 }))
-
-              // return
               for (let i = 0; i < gm.positions.length; i++) {
-                // new_02.push((i + (i + columns)) / 2)
-                if (i + columns < gm.positions.length) new_02.push(getAverage(i, i + columns))
-                if (i % columns === gm.columns) {
-                } else {
-                  // new_01.push((i + (i + 1)) / 2)
-                  if (i + 1 < gm.positions.length) new_01.push(getAverage(i, i + 1))
-                  // if (i < gm.positions.length - columns) {
-                  // new_03.push((i + (i + 1) + (i + columns) + (i + columns + 1)) / 2)
-                  if (i + columns < gm.positions.length) new_03.push(getAverage(i, i + 1, i + columns, i + columns + 1))
-                  // }
+                // if (i === 5) break
+                if (i && i % (gm.columns + additional) === 0) {
+                  if (fill_type === "across") {
+                    i -= gm.columns
+                    additional = 1
+                    fill_type = "down"
+                  } else if (fill_type === "down") {
+                    i -= gm.columns + additional
+                    additional = 0
+                    fill_type = "middle"
+                  } else {
+                    fill_type = "across"
+                    i = 4
+                    console.warn("break")
+                    // console.error(`i is going to be ${i + 1}`)
+                  }
+                }
+                console.log("\t is", fill_type, i, gm.positions.length)
+
+                if (balls++ > 50) break
+                continue
+                console.warn("Direction:", fill_type)
+                switch (fill_type) {
+                  case "across":
+                    new_01.push((i + (i + 1)) / 2)
+                    break
+                  case "down":
+                    console.warn("\t adding", i, columns)
+                    new_02.push((i + (i + columns)) / 2)
+                    break
+                  default:
+                    console.warn(i, i + 1, i + columns, i + columns + 1)
+                    new_03.push((i + (i + columns) + (i + 1) + (i + columns + 1)) / 4)
+                    break
                 }
               }
-
+              const new_00 = gm.positions.map((pos, i) => i)
               console.log(new_00)
               console.log(new_01)
               console.log(new_02)
               console.log(new_03)
-              // return
 
-              let direction = "across"
+              const flip_at = columns + gm.columns
+              fill_type = "across"
+              let counter = gm.positions.length + new_01.length + new_02.length + new_03.length + 10
+              let next
+              console.warn("\r\r.... con-tin-ue")
+              console.log(gm.positions.length + new_01.length + new_02.length + new_03.length)
+              let tick = 0
+              return
+              while (new_00.length && new_01.length && new_02.length && new_03.length) {
+                console.warn("\t", tick++, fill_type)
+                console.log("\t\t", new_00.length + new_01.length + new_02.length + new_03.length)
 
-              let total = new_00.length + new_01.length + new_02.length + new_03.length
-              let killer = 100
-              const col_total = gm.columns + columns
-              while (total) {
-                switch (direction) {
+                switch (fill_type) {
                   case "across":
-                    for (let i = 0; i < col_total; i++) {
-                      if (i % 2) {
-                        final.push(new_01.shift())
-                      } else {
-                        final.push(new_00.shift())
-                      }
-                      if (i === col_total - 1) direction = "middle"
-                    }
+                    next = new_00.shift()
+                    // console.log(next)
+                    if (next >= 0) final.push(next)
+
+                    next = new_01.shift()
+                    // console.log(next)
+                    if (next >= 0) final.push(next)
+
+                    if (tick > 0 && tick % flip_at === 0) fill_type = "down"
                     break
-                  case "middle":
-                    // if (total <= 7) break
-                    for (let i = 0; i < col_total; i++) {
-                      if (i % 2) {
-                        final.push(new_03.shift())
-                      } else {
-                        final.push(new_02.shift())
-                      }
-                      if (i === col_total - 1) direction = "across"
-                    }
+                  case "down":
+                    next = new_02.shift()
+                    if (next >= 0) final.push(next)
+
+                    next = new_03.shift()
+                    if (next >= 0) final.push(next)
+
+                    if (tick > 0 && tick % flip_at === 0) fill_type = "across"
                     break
+
                   default:
                     break
                 }
-
-                total = new_00.length + new_01.length + new_02.length + new_03.length
-
-                if (--killer <= 0) {
+                if (--counter <= 0) {
+                  console.error("STOP IT")
                   break
                 }
               }
-
-              dummy.doublePoints(final)
-
-              setForceUpdate(Math.random())
-
+              console.warn(final)
               // width: ${GridManager.width}, height: ${GridManager.height}, width: ${GridManager.width}, height: ${GridManager.height},  `
             }}
           >
@@ -319,6 +319,7 @@ const Builder = React.forwardRef((props, ref) => {
           <div
             className="button"
             onClick={() => {
+              console.clear()
               const attributes = ["width", "height", "columns", "rows"]
               let output = `{ `
               const gm = dummy.meshCanvas.gridManager
@@ -339,7 +340,7 @@ const Builder = React.forwardRef((props, ref) => {
               output += "]"
 
               output += "}"
-
+              console.log(output)
               // width: ${GridManager.width}, height: ${GridManager.height}, width: ${GridManager.width}, height: ${GridManager.height},  `
             }}
           >

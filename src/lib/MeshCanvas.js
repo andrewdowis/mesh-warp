@@ -16,7 +16,7 @@ export default class MeshCanvas {
 
     this.gridManager = gridManager
 
-    this.update()
+    this.refresh()
   }
 
   updateMeshLines() {
@@ -94,17 +94,13 @@ export default class MeshCanvas {
     let w_sliced = img.width / columns
     let h_sliced = img.height / rows
 
-    const upperLeft = gm.rootPositions[0]
-
-    const { x: upperX, y: upperY } = upperLeft
-    const w_x = upperX + w_sliced // * column
-    const h_y = upperY + h_sliced // * row
-
     ctx_output.clearRect(0, 0, w, h)
     // render the images
-    const target = gm.positions.length - columns - 1
-    for (let i = target - 1; i > -1; i--) {
-      if ((i + 1) % (columns + 1) === 0) continue
+    const target = gm.positions.length - 1 - columns - 2
+    const rewind_amount = columns + 1
+    const skip_amount = rewind_amount * rows - 1
+    for (let i = target; i > -1; i -= rewind_amount) {
+      // console.log(i, Math.random())
       const c1 = gm.positions[i]
       const c2 = gm.positions[i + 1]
       const c3 = gm.positions[i + 1 + columns]
@@ -122,16 +118,16 @@ export default class MeshCanvas {
       let y4 = c4.y
 
       // the bottom-right face
-      let xn = this.linearSolution(w_x, h_y, x4, w_x, upperX, x2, upperX, h_y, x3)
-      let yn = this.linearSolution(w_x, h_y, y4, w_x, upperY, y2, upperY, h_y, y3)
+      let xn = this.linearSolution(w_sliced, h_sliced, x4, w_sliced, 0, x2, 0, h_sliced, x3)
+      let yn = this.linearSolution(w_sliced, h_sliced, y4, w_sliced, 0, y2, 0, h_sliced, y3)
 
       ctx_output.save()
       ctx_output.setTransform(xn[0], yn[0], xn[1], yn[1], xn[2], yn[2])
       ctx_output.beginPath()
-      ctx_output.moveTo(w_x, h_y)
-      ctx_output.lineTo(w_x, upperY)
-      ctx_output.lineTo(upperX, h_y)
-      ctx_output.lineTo(w_x, h_y)
+      ctx_output.moveTo(w_sliced, h_sliced)
+      ctx_output.lineTo(w_sliced, 0)
+      ctx_output.lineTo(0, h_sliced)
+      ctx_output.lineTo(w_sliced, h_sliced)
       ctx_output.closePath()
       ctx_output.fillStyle = "transparent"
       ctx_output.fill()
@@ -141,27 +137,33 @@ export default class MeshCanvas {
       ctx_output.restore()
 
       // the top-left face
-      let xm = this.linearSolution(upperX, upperX, x1, w_x, upperX, x2, upperX, h_y, x3)
-      let ym = this.linearSolution(upperY, upperY, y1, w_x, upperY, y2, upperY, h_y, y3)
+      let xm = this.linearSolution(0, 0, x1, w_sliced, 0, x2, 0, h_sliced, x3)
+      let ym = this.linearSolution(0, 0, y1, w_sliced, 0, y2, 0, h_sliced, y3)
 
       ctx_output.save()
       ctx_output.setTransform(xm[0], ym[0], xm[1], ym[1], xm[2], ym[2])
       ctx_output.beginPath()
-      ctx_output.moveTo(upperX, upperY)
-      ctx_output.lineTo(w_x, upperY)
-      ctx_output.lineTo(upperX, h_y)
-      ctx_output.lineTo(upperX, upperY)
+      ctx_output.moveTo(0, 0)
+      ctx_output.lineTo(w_sliced, 0)
+      ctx_output.lineTo(0, h_sliced)
+      ctx_output.lineTo(0, 0)
       ctx_output.closePath()
       ctx_output.fillStyle = "transparent"
       ctx_output.fill()
       ctx_output.clip()
       ctx_output.drawImage(img, rootX, rootY, w_sliced, h_sliced, 0, 0, w_sliced, h_sliced)
       ctx_output.restore()
+
+      if (i && i - rewind_amount < 0) i += skip_amount
     }
   }
 
-  update() {
+  refresh() {
     this.meshify()
     this.updateMeshLines()
+  }
+
+  doublePoints(newPositions) {
+    this.gridManager.doublePoints(newPositions)
   }
 }

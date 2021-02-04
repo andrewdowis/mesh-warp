@@ -31,11 +31,12 @@ export default class CanvasDummy {
   initMesh(width, height, data) {
     const gridManager = new GridManager()
 
+    // data = null
     data = data || {
       width: this.parent.width,
       height: this.parent.height,
-      columns: 10,
-      rows: 12,
+      columns: 1,
+      rows: 1,
     }
 
     gridManager.init(data)
@@ -46,14 +47,20 @@ export default class CanvasDummy {
     // this.parentDummy = parentDummy
   }
 
+  doublePoints(newPositions) {
+    console.log(this.meshCanvas)
+    this.meshCanvas.doublePoints(newPositions)
+    this.refresh()
+  }
+
   updateDot(index, x, y) {
     this.meshCanvas.gridManager.updateDot(index, x, y)
-    this.meshCanvas.update()
+    this.meshCanvas.refresh()
   }
 
   refresh() {
     if (this.meshCanvas) {
-      this.meshCanvas.update()
+      this.meshCanvas.refresh()
     } else {
       let ctx = this.canvas.getContext("2d")
       ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)

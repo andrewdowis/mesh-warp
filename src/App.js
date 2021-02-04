@@ -64,7 +64,8 @@ export default function App() {
   const [forceUpdate, setForceUpdate] = useState()
 
   const assets = [
-    require("./assets/textures/asset_01.jpg").default,
+    require("./assets/textures/asset_01a.jpg").default,
+    // require("./assets/textures/asset_01.jpg").default,
     require("./assets/textures/asset_02.jpg").default,
     require("./assets/textures/asset_03.jpg").default,
     require("./assets/textures/asset_04.jpg").default,
@@ -162,7 +163,9 @@ export default function App() {
         if (++completed === assets.length + layers.length) {
           const img = assetData.current[0]
 
+          // setTimeout(() => {
           setSourceBitmapData(img)
+          // }, 1000)
           CanvasDummyBuilder.init(img)
         }
       }
@@ -194,24 +197,20 @@ export default function App() {
   //   </div>
   // )
 
-  if (!sourceBitmapData) return <div>LOADING!</div>
+  if (!sourceBitmapData) return <div className="loading">LOADING!</div>
 
   // return <div ref={whatever} />
   return (
     <Router history={history}>
       <Switch>
-        {["/dev/rock2d/#/admin", "/dev/rock2d/admin", "/#/admin", "/admin"].map((path, i) => {
-          return (
-            <Route
-              key={`route_${i}`}
-              path={path}
-              render={props => {
-                return <Builder sourceBitmapData={sourceBitmapData} dispatch={handleMouseEvent} />
-              }}
-            />
-          )
-        })}
-        <Route path="" render={props => <Preview thumbs={assetData.current} layers={layerData.current} />} />
+        <Route
+          // path="/admin"
+          path="/"
+          render={props => {
+            return <Builder sourceBitmapData={sourceBitmapData} dispatch={handleMouseEvent} />
+          }}
+        />
+        {/* <Route path="" render={props => <Preview thumbs={assetData.current} layers={layerData.current} />} /> */}
       </Switch>
     </Router>
   )
