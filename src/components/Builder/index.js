@@ -47,7 +47,7 @@ const Builder = React.forwardRef((props, ref) => {
           // })
           // }
 
-          setDummyIndex(2)
+          setDummyIndex(0)
         }
       }
 
