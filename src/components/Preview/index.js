@@ -3,6 +3,8 @@ import { traverseTwoPhase } from "react-dom/test-utils"
 import GridManager from "../../lib/GridManager"
 import CanvasDummyBuilder from "../../lib/CanvasDummyBuilder"
 
+import { CanvasColoring } from "@ff0000-ad-tech/ad-canvas"
+
 import "./style.scss"
 // while (whatever.current.childNodes.length) whatever.current.removeChild(whatever.current.childNodes[0])
 //           CanvasDummyBuilder.meshables.forEach((dummy, i) => {
@@ -38,20 +40,29 @@ const Preview = React.forwardRef((props, ref) => {
             ctx.globalCompositeOperation = "source-atop"
 
             // ctx.drawImage(thumbs[selected], 0, 0, canvas.width, canvas.height)
-            ctx.drawImage(CanvasDummyBuilder.meshables[2].meshCanvas.output, 4, 4, canvas.width, canvas.height)
+            ctx.drawImage(CanvasDummyBuilder.meshables[2].meshCanvas.output, 2, 2, canvas.width, canvas.height)
             ctx.drawImage(CanvasDummyBuilder.meshables[2].meshCanvas.output, 0, 0, canvas.width, canvas.height)
             break
           case 4:
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
             ctx.globalCompositeOperation = "source-atop"
             //   // ctx.drawImage(thumbs[selected], 0, 0, canvas.width, canvas.height)
-            ctx.drawImage(CanvasDummyBuilder.meshables[0].meshCanvas.output, 4, 4, canvas.width, canvas.height)
+            ctx.drawImage(CanvasDummyBuilder.meshables[0].meshCanvas.output, 2, 2, canvas.width, canvas.height)
             ctx.drawImage(CanvasDummyBuilder.meshables[0].meshCanvas.output, 0, 0, canvas.width, canvas.height)
             break
           default:
             break
         }
         ctx.globalCompositeOperation = "source-over"
+        CanvasColoring.contrast({
+          target: canvasRef.current,
+          amount: 1.02,
+        })
+        // CanvasColoring.tint({
+        //   target: canvasRef.current,
+        //   color: "rgb(255, 255, 255)",
+        //   amount: 0.1,
+        // })
       }
     }
   }, [selected])

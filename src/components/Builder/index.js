@@ -21,6 +21,7 @@ const Builder = React.forwardRef((props, ref) => {
   const [dummyIndex, setDummyIndex] = useState()
   const [dummy, setDummy] = useState()
   const [opacity, setOpacity] = useState(1)
+  const [transparency, setTransparency] = useState(1)
   const [showDots, setShowDots] = useState(true)
   const [wireframeOpacity, setWireframeOpacity] = useState(1)
 
@@ -46,7 +47,7 @@ const Builder = React.forwardRef((props, ref) => {
           // })
           // }
 
-          setDummyIndex(0)
+          setDummyIndex(2)
         }
       }
 
@@ -114,48 +115,47 @@ const Builder = React.forwardRef((props, ref) => {
               opacity,
             }}
           ></div>
-          {showDots && (
-            <div
-              ref={dotsHolder}
-              id="dots-holder"
-              className="dots-holder"
-              onMouseDown={event => {
-                dispatch(event, Infinity, dummyIndex, dotsHolder.current)
-              }}
-              style={{
-                width: dummy.meshCanvas.output.width,
-                height: dummy.meshCanvas.output.height,
-              }}
-            >
-              {/* <div className="controls">{getControls("columns")}</div> */}
-              {/* <div> */}
-              {dummy.meshCanvas.gridManager.positions.map((coord, index) => {
-                return (
-                  <div
-                    onMouseDown={event => {
-                      dispatch(event, index, dummyIndex, dotsHolder.current)
-                    }}
-                    key={`dot_${index}`}
-                    className="grid-dot"
-                    style={{
-                      left: coord.x,
-                      top: coord.y,
-                    }}
-                  >
-                    <div className="cross-01" />
-                    <div className="cross-02" />
-                    {/* <p>{index}</p> */}
-                  </div>
-                )
-              })}
-              {/* </div> */}
-            </div>
-          )}
+
+          <div
+            ref={dotsHolder}
+            id="dots-holder"
+            className="dots-holder"
+            onMouseDown={event => {
+              dispatch(event, Infinity, dummyIndex, dotsHolder.current)
+            }}
+            style={{
+              opacity: +showDots,
+              width: dummy.meshCanvas.output.width,
+              height: dummy.meshCanvas.output.height,
+            }}
+          >
+            {/* <div className="controls">{getControls("columns")}</div> */}
+            {/* <div> */}
+            {dummy.meshCanvas.gridManager.positions.map((coord, index) => {
+              return (
+                <div
+                  onMouseDown={event => {
+                    dispatch(event, index, dummyIndex, dotsHolder.current)
+                  }}
+                  key={`dot_${index}`}
+                  className="grid-dot"
+                  style={{
+                    left: coord.x,
+                    top: coord.y,
+                  }}
+                >
+                  <div className="cross-01" />
+                  <div className="cross-02" />
+                  {/* <p>{index}</p> */}
+                </div>
+              )
+            })}
+            {/* </div> */}
+          </div>
         </div>
       </div>
       <div className="controls">
         <div className="button-holder">
-          <div>THESE ARE THE DUMMIES</div>
           {CanvasDummyBuilder.meshables.map((ignore, index) => {
             return (
               <div
@@ -173,7 +173,7 @@ const Builder = React.forwardRef((props, ref) => {
           <div
             className="button"
             onClick={() => {
-              setOpacity(opacity ? 0 : 1)
+              setOpacity(opacity ? 0 : transparency)
             }}
           >
             <p>{`${!opacity ? "Show" : "Hide"} Mesh Warp`}</p>
@@ -203,7 +203,9 @@ const Builder = React.forwardRef((props, ref) => {
           <div
             className="button"
             onClick={() => {
-              setOpacity(opacity === 1 ? 0.55 : 1)
+              const next_opacity = opacity === 1 ? 0.55 : 1
+              setTransparency(next_opacity)
+              setOpacity(next_opacity)
             }}
           >
             <p>Toggle Transparency</p>

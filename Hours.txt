@@ -2,3 +2,5 @@ Friday: 5
 Saturday: 7
 Sunday: 10
 Monday: 2
+Wedneday: 3.4
+Thursday: 1

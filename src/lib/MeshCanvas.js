@@ -25,7 +25,7 @@ export default class MeshCanvas {
 
     ctx_wireframe.clearRect(0, 0, this.wireframe.width, this.wireframe.height)
     ctx_wireframe.strokeStyle = "lime"
-    ctx_wireframe.lineWidth = 2
+    ctx_wireframe.lineWidth = 1
     for (let i = 0; i < this.gridManager.positions.length; i++) {
       const coord = this.gridManager.positions[i]
       let neighbor = this.gridManager.positions[i + 1]

@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/dev/rock2d/static/css/main.8d5dcf2b.chunk.css",
-    "main.js": "/dev/rock2d/static/js/main.297027e3.chunk.js",
-    "main.js.map": "/dev/rock2d/static/js/main.297027e3.chunk.js.map",
-    "runtime-main.js": "/dev/rock2d/static/js/runtime-main.e3bd49c2.js",
-    "runtime-main.js.map": "/dev/rock2d/static/js/runtime-main.e3bd49c2.js.map",
-    "static/js/2.0fb8b1a9.chunk.js": "/dev/rock2d/static/js/2.0fb8b1a9.chunk.js",
-    "static/js/2.0fb8b1a9.chunk.js.map": "/dev/rock2d/static/js/2.0fb8b1a9.chunk.js.map",
-    "static/js/3.7b8dfe3d.chunk.js": "/dev/rock2d/static/js/3.7b8dfe3d.chunk.js",
-    "static/js/3.7b8dfe3d.chunk.js.map": "/dev/rock2d/static/js/3.7b8dfe3d.chunk.js.map",
+    "main.css": "/dev/rock2d/static/css/main.46d659f9.chunk.css",
+    "main.js": "/dev/rock2d/static/js/main.348664fe.chunk.js",
+    "main.js.map": "/dev/rock2d/static/js/main.348664fe.chunk.js.map",
+    "runtime-main.js": "/dev/rock2d/static/js/runtime-main.893fde23.js",
+    "runtime-main.js.map": "/dev/rock2d/static/js/runtime-main.893fde23.js.map",
+    "static/js/2.0fd5cdd0.chunk.js": "/dev/rock2d/static/js/2.0fd5cdd0.chunk.js",
+    "static/js/2.0fd5cdd0.chunk.js.map": "/dev/rock2d/static/js/2.0fd5cdd0.chunk.js.map",
+    "static/js/3.07c4144c.chunk.js": "/dev/rock2d/static/js/3.07c4144c.chunk.js",
+    "static/js/3.07c4144c.chunk.js.map": "/dev/rock2d/static/js/3.07c4144c.chunk.js.map",
     "index.html": "/dev/rock2d/index.html",
-    "static/css/main.8d5dcf2b.chunk.css.map": "/dev/rock2d/static/css/main.8d5dcf2b.chunk.css.map",
-    "static/js/2.0fb8b1a9.chunk.js.LICENSE.txt": "/dev/rock2d/static/js/2.0fb8b1a9.chunk.js.LICENSE.txt",
+    "static/css/main.46d659f9.chunk.css.map": "/dev/rock2d/static/css/main.46d659f9.chunk.css.map",
+    "static/js/2.0fd5cdd0.chunk.js.LICENSE.txt": "/dev/rock2d/static/js/2.0fd5cdd0.chunk.js.LICENSE.txt",
     "static/media/asset_01.jpg": "/dev/rock2d/static/media/asset_01.dae64ad5.jpg",
     "static/media/asset_02.jpg": "/dev/rock2d/static/media/asset_02.a1965573.jpg",
     "static/media/asset_03.jpg": "/dev/rock2d/static/media/asset_03.885eb998.jpg",
@@ -29,9 +29,9 @@
     "static/media/sock_mask_right.png": "/dev/rock2d/static/media/sock_mask_right.7a9dd145.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.e3bd49c2.js",
-    "static/js/2.0fb8b1a9.chunk.js",
-    "static/css/main.8d5dcf2b.chunk.css",
-    "static/js/main.297027e3.chunk.js"
+    "static/js/runtime-main.893fde23.js",
+    "static/js/2.0fd5cdd0.chunk.js",
+    "static/css/main.46d659f9.chunk.css",
+    "static/js/main.348664fe.chunk.js"
   ]
 }
