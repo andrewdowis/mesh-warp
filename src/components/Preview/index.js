@@ -39,16 +39,17 @@ const Preview = React.forwardRef((props, ref) => {
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
             ctx.globalCompositeOperation = "source-atop"
 
-            // ctx.drawImage(thumbs[selected], 0, 0, canvas.width, canvas.height)
-            ctx.drawImage(CanvasDummyBuilder.meshables[2].meshCanvas.output, 2, 2, canvas.width, canvas.height)
-            ctx.drawImage(CanvasDummyBuilder.meshables[2].meshCanvas.output, 0, 0, canvas.width, canvas.height)
+            for (let i = 4; i > -1; i--) {
+              ctx.drawImage(CanvasDummyBuilder.meshables[2].meshCanvas.output, i, i, canvas.width, canvas.height)
+            }
             break
           case 4:
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
             ctx.globalCompositeOperation = "source-atop"
-            //   // ctx.drawImage(thumbs[selected], 0, 0, canvas.width, canvas.height)
-            ctx.drawImage(CanvasDummyBuilder.meshables[0].meshCanvas.output, 2, 2, canvas.width, canvas.height)
-            ctx.drawImage(CanvasDummyBuilder.meshables[0].meshCanvas.output, 0, 0, canvas.width, canvas.height)
+
+            for (let i = 4; i > -1; i--) {
+              ctx.drawImage(CanvasDummyBuilder.meshables[0].meshCanvas.output, i, i, canvas.width, canvas.height)
+            }
             break
           default:
             break
