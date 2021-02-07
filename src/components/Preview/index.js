@@ -55,15 +55,19 @@ const Preview = React.forwardRef((props, ref) => {
             break
         }
         ctx.globalCompositeOperation = "source-over"
+        CanvasColoring.tint({
+          target: canvasRef.current,
+          color: "rgb(255, 255, 255)",
+          amount: 0.01,
+        })
+        CanvasColoring.saturation({
+          target: canvasRef.current,
+          amount: 1.05,
+        })
         CanvasColoring.contrast({
           target: canvasRef.current,
           amount: 1.02,
         })
-        // CanvasColoring.tint({
-        //   target: canvasRef.current,
-        //   color: "rgb(255, 255, 255)",
-        //   amount: 0.1,
-        // })
       }
     }
   }, [selected])
