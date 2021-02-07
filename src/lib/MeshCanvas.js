@@ -1,13 +1,43 @@
+import { MathUtils } from "@ff0000-ad-tech/ad-utils"
+import { getAnglePoint } from "@ff0000-ad-tech/ad-utils/lib/MathUtils"
+
+const getAverage = (...numbers) => {
+  let number = 0
+  numbers.forEach(num => (number += num))
+  return number / numbers.length
+}
+
+const averagePoints = (...points) => {
+  let newPoint = { x: 0, y: 0 }
+  points.forEach(point => {
+    newPoint.x += point.x
+    newPoint.y += point.y
+  })
+  return {
+    x: newPoint.x / points.length,
+    y: newPoint.y / points.length,
+  }
+}
+
 export default class MeshCanvas {
   init(width, height, image, gridManager) {
     this.output = document.createElement("canvas")
     this.output.id = `output`
+
+    this.filler = document.createElement("canvas")
+    this.filler.id = `filler`
 
     this.wireframe = document.createElement("canvas")
     this.wireframe.id = `wireframe`
 
     this.output.width = width
     this.output.height = height
+    // this.output.style.backgroundColor = "black"
+
+    this.filler.width = width
+    this.filler.height = height
+    // this.filler.style.left = `${this.output.width / 2}px`
+    // this.filler.style.backgroundColor = "red"
 
     this.wireframe.width = width
     this.wireframe.height = height
@@ -43,23 +73,23 @@ export default class MeshCanvas {
       ctx_wireframe.closePath()
     }
 
-    // ctx_wireframe.strokeStyle = "red"
-    // ctx_wireframe.lineWidth = 0.5
-    // for (let i = 0; i < this.gridManager.positions.length; i++) {
-    //   if (i % (this.gridManager.columns + 1) === 0) continue
+    ctx_wireframe.strokeStyle = "cyan"
+    ctx_wireframe.lineWidth = 1
+    for (let i = 0; i < this.gridManager.positions.length; i++) {
+      if (i % (this.gridManager.columns + 1) === 0) continue
 
-    //   const coord = this.gridManager.positions[i]
-    //   let neighbor = this.gridManager.positions[i + this.gridManager.columns]
+      const coord = this.gridManager.positions[i]
+      let neighbor = this.gridManager.positions[i + this.gridManager.columns]
 
-    //   if (!neighbor) break
+      if (!neighbor) break
 
-    //   ctx_wireframe.beginPath()
-    //   ctx_wireframe.moveTo(coord.x, coord.y)
-    //   ctx_wireframe.lineTo(neighbor.x, neighbor.y)
+      ctx_wireframe.beginPath()
+      ctx_wireframe.moveTo(coord.x, coord.y)
+      ctx_wireframe.lineTo(neighbor.x, neighbor.y)
 
-    //   ctx_wireframe.stroke()
-    //   ctx_wireframe.closePath()
-    // }
+      ctx_wireframe.stroke()
+      ctx_wireframe.closePath()
+    }
   }
 
   linearSolution(r1, s1, t1, r2, s2, t2, r3, s3, t3) {
@@ -81,84 +111,92 @@ export default class MeshCanvas {
     return [a, b, c]
   }
 
-  meshify() {
-    let img = this.src
+  meshify(showFiller = false) {
+    const canvi = [this.output]
+    if (showFiller) canvi.push(this.filler)
+    // console.log(`%c ${showFiller}`, "color: black; background-color: cyan; font-style: italic; padding: 2px;")
+    canvi.forEach((canvas, c) => {
+      let img = this.src
 
-    let gm = this.gridManager
-    let { columns, rows } = gm
+      let gm = this.gridManager
+      let { columns, rows } = gm
 
-    let ctx_output = this.output.getContext("2d")
-    let w = this.output.width
-    let h = this.output.height
+      let ctx = canvas.getContext("2d")
+      let w = canvas.width
+      let h = canvas.height
 
-    let w_sliced = img.width / columns
-    let h_sliced = img.height / rows
+      const offset = c * 4
 
-    ctx_output.clearRect(0, 0, w, h)
-    // render the images
-    const target = gm.positions.length - 1 - columns - 2
-    const rewind_amount = columns + 1
-    const skip_amount = rewind_amount * rows - 1
-    for (let i = target; i > -1; i -= rewind_amount) {
-      const c1 = gm.positions[i]
-      const c2 = gm.positions[i + 1]
-      const c3 = gm.positions[i + 1 + columns]
-      const c4 = gm.positions[i + 2 + columns]
+      let w_sliced = img.width / columns
+      let h_sliced = img.height / rows
 
-      const { x: rootX, y: rootY } = gm.rootPositions[i]
+      ctx.clearRect(0, 0, w, h)
+      // render the images
+      const target = gm.positions.length - 1 - columns - 2
+      const rewind_amount = columns + 1
+      const skip_amount = rewind_amount * rows - 1
 
-      let x1 = c1.x
-      let y1 = c1.y
-      let x2 = c2.x
-      let y2 = c2.y
-      let x3 = c3.x
-      let y3 = c3.y
-      let x4 = c4.x
-      let y4 = c4.y
+      for (let i = target; i > -1; i -= rewind_amount) {
+        const c1 = gm.positions[i]
+        const c2 = gm.positions[i + 1]
+        const c3 = gm.positions[i + 1 + columns]
+        const c4 = gm.positions[i + 2 + columns]
 
-      // the bottom-right face
-      let xn = this.linearSolution(w_sliced, h_sliced, x4, w_sliced, 0, x2, 0, h_sliced, x3)
-      let yn = this.linearSolution(w_sliced, h_sliced, y4, w_sliced, 0, y2, 0, h_sliced, y3)
+        let { x: rootX, y: rootY } = gm.rootPositions[i]
 
-      ctx_output.save()
-      ctx_output.setTransform(xn[0], yn[0], xn[1], yn[1], xn[2], yn[2])
-      ctx_output.beginPath()
-      ctx_output.moveTo(w_sliced, h_sliced)
-      ctx_output.lineTo(w_sliced, 0)
-      ctx_output.lineTo(0, h_sliced)
-      ctx_output.lineTo(w_sliced, h_sliced)
-      ctx_output.closePath()
-      ctx_output.fillStyle = "transparent"
-      ctx_output.fill()
-      ctx_output.clip()
-      ctx_output.drawImage(img, rootX, rootY, w_sliced, h_sliced, 0, 0, w_sliced, h_sliced)
+        let x1 = c1.x + offset
+        let y1 = c1.y + offset
+        let x2 = c2.x + offset
+        let y2 = c2.y + offset
+        let x3 = c3.x + offset
+        let y3 = c3.y + offset
+        let x4 = c4.x + offset
+        let y4 = c4.y + offset
 
-      ctx_output.restore()
+        // the bottom-right face
+        let xn = this.linearSolution(w_sliced, h_sliced, x4, w_sliced, 0, x2, 0, h_sliced, x3)
+        let yn = this.linearSolution(w_sliced, h_sliced, y4, w_sliced, 0, y2, 0, h_sliced, y3)
 
-      // the top-left face
-      let xm = this.linearSolution(0, 0, x1, w_sliced, 0, x2, 0, h_sliced, x3)
-      let ym = this.linearSolution(0, 0, y1, w_sliced, 0, y2, 0, h_sliced, y3)
+        ctx.save()
+        ctx.setTransform(xn[0], yn[0], xn[1], yn[1], xn[2], yn[2])
+        ctx.beginPath()
+        ctx.moveTo(w_sliced, h_sliced)
+        ctx.lineTo(w_sliced, 0)
+        ctx.lineTo(0, h_sliced)
+        ctx.closePath()
+        ctx.fillStyle = "transparent"
+        // ctx.fillStyle = "pink"
+        ctx.fill()
+        ctx.clip()
+        ctx.drawImage(img, rootX, rootY, w_sliced, h_sliced, 0, 0, w_sliced, h_sliced)
 
-      ctx_output.save()
-      ctx_output.setTransform(xm[0], ym[0], xm[1], ym[1], xm[2], ym[2])
-      ctx_output.beginPath()
-      ctx_output.moveTo(0, 0)
-      ctx_output.lineTo(w_sliced, 0)
-      ctx_output.lineTo(0, h_sliced)
-      ctx_output.lineTo(0, 0)
-      ctx_output.closePath()
-      ctx_output.fillStyle = "transparent"
-      ctx_output.fill()
-      ctx_output.clip()
-      ctx_output.drawImage(img, rootX, rootY, w_sliced, h_sliced, 0, 0, w_sliced, h_sliced)
-      ctx_output.restore()
+        ctx.restore()
 
-      if (i && i - rewind_amount < 0) i += skip_amount
-    }
+        // the top-left face
+        let xm = this.linearSolution(0, 0, x1, w_sliced, 0, x2, 0, h_sliced, x3)
+        let ym = this.linearSolution(0, 0, y1, w_sliced, 0, y2, 0, h_sliced, y3)
+
+        ctx.save()
+        ctx.setTransform(xm[0], ym[0], xm[1], ym[1], xm[2], ym[2])
+        ctx.beginPath()
+        ctx.moveTo(0, 0)
+        ctx.lineTo(w_sliced, 0)
+        ctx.lineTo(0, h_sliced)
+        ctx.closePath()
+        ctx.fillStyle = "transparent"
+        // ctx.fillStyle = "purple"
+        ctx.fill()
+        ctx.clip()
+        ctx.drawImage(img, rootX, rootY, w_sliced, h_sliced, 0, 0, w_sliced, h_sliced)
+        ctx.restore()
+
+        if (i && i - rewind_amount < 0) i += skip_amount
+      }
+    })
   }
 
-  refresh() {
-    this.meshify()
+  refresh(showFiller = false) {
+    this.meshify(showFiller)
     this.updateMeshLines()
   }
 

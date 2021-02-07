@@ -12,13 +12,22 @@ import "./style.scss"
 //           })
 import { Actions } from "../../App"
 
+// const delayedPromise = async status => {
+//   console.warn("called")
+//   return new Promise((resolve, reject) => {
+//     setTimeout(resolve, 300)
+//   })
+// }
+
 const Preview = React.forwardRef((props, ref) => {
   const { thumbs, layers } = props
   const canvasRef = useRef()
 
   const [selected, setSelected] = useState(0)
 
-  useEffect(() => {
+  // const [status, setStatus] = useState("Loading")
+
+  useEffect(async () => {
     if (selected >= 0) {
       CanvasDummyBuilder.refresh(thumbs[selected])
       const canvas = canvasRef.current
@@ -39,34 +48,33 @@ const Preview = React.forwardRef((props, ref) => {
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
             ctx.globalCompositeOperation = "source-atop"
 
-            for (let i = 4; i > -1; i--) {
-              ctx.drawImage(CanvasDummyBuilder.meshables[2].meshCanvas.output, i, i, canvas.width, canvas.height)
-            }
+            ctx.drawImage(CanvasDummyBuilder.meshables[2].meshCanvas.filler, 0, 0, canvas.width, canvas.height)
+            ctx.drawImage(CanvasDummyBuilder.meshables[2].meshCanvas.output, 0, 0, canvas.width, canvas.height)
             break
           case 4:
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
             ctx.globalCompositeOperation = "source-atop"
 
-            for (let i = 4; i > -1; i--) {
-              ctx.drawImage(CanvasDummyBuilder.meshables[0].meshCanvas.output, i, i, canvas.width, canvas.height)
-            }
+            ctx.drawImage(CanvasDummyBuilder.meshables[0].meshCanvas.filler, 0, 0, canvas.width, canvas.height)
+            ctx.drawImage(CanvasDummyBuilder.meshables[0].meshCanvas.output, 0, 0, canvas.width, canvas.height)
             break
           default:
             break
         }
         ctx.globalCompositeOperation = "source-over"
+
         CanvasColoring.tint({
           target: canvasRef.current,
           color: "rgb(255, 255, 255)",
-          amount: 0.01,
+          amount: 0.0075,
         })
         CanvasColoring.saturation({
           target: canvasRef.current,
-          amount: 1.05,
+          amount: 1.04,
         })
         CanvasColoring.contrast({
           target: canvasRef.current,
-          amount: 1.02,
+          amount: 1.015,
         })
       }
     }
@@ -90,7 +98,10 @@ const Preview = React.forwardRef((props, ref) => {
             )
           })}
         </div>
-        <canvas ref={canvasRef} width={1000} height={1000} />
+        <div className="preview-content">
+          <canvas ref={canvasRef} width={1000} height={1000} />
+          {/* {status && <div className="status">{status}</div>} */}
+        </div>
       </div>
     </div>
   )

@@ -35,8 +35,8 @@ export default class CanvasDummy {
     data = data || {
       width: this.parent.width,
       height: this.parent.height,
-      columns: 5,
-      rows: 6,
+      columns: 10,
+      rows: 20,
     }
 
     gridManager.init(data)
@@ -57,9 +57,9 @@ export default class CanvasDummy {
     this.meshCanvas.refresh()
   }
 
-  refresh() {
+  refresh(showFiller = false) {
     if (this.meshCanvas) {
-      this.meshCanvas.refresh()
+      this.meshCanvas.refresh(showFiller)
     } else {
       let ctx = this.canvas.getContext("2d")
       ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)

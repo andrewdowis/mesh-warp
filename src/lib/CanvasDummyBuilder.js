@@ -94,11 +94,11 @@ class CanvasDummyBuilder {
 
     non_meshy.forEach((dummy, i) => {
       dummy.values[0] = img
-      dummy.refresh()
+      dummy.refresh(true)
     })
 
     this.meshables.forEach((dummy, i) => {
-      dummy.refresh()
+      dummy.refresh(true)
     })
   }
 }

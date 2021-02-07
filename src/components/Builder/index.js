@@ -21,7 +21,7 @@ const Builder = React.forwardRef((props, ref) => {
   const [dummyIndex, setDummyIndex] = useState()
   const [dummy, setDummy] = useState()
   const [opacity, setOpacity] = useState(1)
-  const [transparency, setTransparency] = useState(1)
+  const [transparency, setTransparency] = useState(false)
   const [showDots, setShowDots] = useState(true)
   const [wireframeOpacity, setWireframeOpacity] = useState(1)
 
@@ -74,8 +74,11 @@ const Builder = React.forwardRef((props, ref) => {
         canvasHolder.current.removeChild(canvasHolder.current.childNodes[0])
 
       dummy.refresh()
+      // canvasHolder.current.appendChild(dummy.meshCanvas.filler)
       canvasHolder.current.appendChild(dummy.meshCanvas.output)
       canvasHolder.current.appendChild(dummy.meshCanvas.wireframe)
+
+      dummy.meshCanvas.wireframe.style.opacity = wireframeOpacity
     }
   }, [dummy])
 
@@ -87,73 +90,9 @@ const Builder = React.forwardRef((props, ref) => {
 
   if (!dummy) return null
 
-  // function getControls(type) {
-  //   const number = dummy.meshCanvas.gridManager[type]
-  //   const dummies
-  //   switch (type) {
-  //     case "columns":
-  //       return <div className="controls-column"></div>
-  //       break
-  //   }
-  // }
-
-  return (
-    <div className="builder">
-      <div className="holder">
-        <div
-          className="guide"
-          style={{
-            width: dummy.meshCanvas.output.width + 200,
-            height: dummy.meshCanvas.output.height + 200,
-          }}
-        >
-          <img draggable={false} src={bitmapData[dummyIndex].src} alt={`guide`} />
-          <div
-            className="canvas-holder"
-            ref={canvasHolder}
-            style={{
-              opacity,
-            }}
-          ></div>
-
-          <div
-            ref={dotsHolder}
-            id="dots-holder"
-            className="dots-holder"
-            onMouseDown={event => {
-              dispatch(event, Infinity, dummyIndex, dotsHolder.current)
-            }}
-            style={{
-              opacity: +showDots,
-              width: dummy.meshCanvas.output.width,
-              height: dummy.meshCanvas.output.height,
-            }}
-          >
-            {/* <div className="controls">{getControls("columns")}</div> */}
-            {/* <div> */}
-            {dummy.meshCanvas.gridManager.positions.map((coord, index) => {
-              return (
-                <div
-                  onMouseDown={event => {
-                    dispatch(event, index, dummyIndex, dotsHolder.current)
-                  }}
-                  key={`dot_${index}`}
-                  className="grid-dot"
-                  style={{
-                    left: coord.x,
-                    top: coord.y,
-                  }}
-                >
-                  <div className="cross-01" />
-                  <div className="cross-02" />
-                  {/* <p>{index}</p> */}
-                </div>
-              )
-            })}
-            {/* </div> */}
-          </div>
-        </div>
-      </div>
+  function getControls(type) {
+    // return null
+    return (
       <div className="controls">
         <div className="button-holder">
           {CanvasDummyBuilder.meshables.map((ignore, index) => {
@@ -314,6 +253,65 @@ const Builder = React.forwardRef((props, ref) => {
           </div>
         </div>
       </div>
+    )
+  }
+
+  return (
+    <div className="builder">
+      <div className="holder">
+        <div
+          className="guide"
+          style={{
+            width: dummy.meshCanvas.output.width + 200,
+            height: dummy.meshCanvas.output.height + 200,
+          }}
+        >
+          <img draggable={false} src={bitmapData[dummyIndex].src} alt={`guide`} />
+          <div
+            className="canvas-holder"
+            ref={canvasHolder}
+            style={{
+              opacity,
+            }}
+          ></div>
+
+          <div
+            ref={dotsHolder}
+            id="dots-holder"
+            className="dots-holder"
+            onMouseDown={event => {
+              dispatch(event, Infinity, dummyIndex, dotsHolder.current)
+            }}
+            style={{
+              opacity: +showDots,
+              width: dummy.meshCanvas.output.width,
+              height: dummy.meshCanvas.output.height,
+            }}
+          >
+            {dummy.meshCanvas.gridManager.positions.map((coord, index) => {
+              return (
+                <div
+                  onMouseDown={event => {
+                    dispatch(event, index, dummyIndex, dotsHolder.current)
+                  }}
+                  key={`dot_${index}`}
+                  className="grid-dot"
+                  style={{
+                    left: coord.x,
+                    top: coord.y,
+                  }}
+                >
+                  <div className="cross-01" />
+                  <div className="cross-02" />
+                  {/* <p>{index}</p> */}
+                </div>
+              )
+            })}
+            {/* </div> */}
+          </div>
+        </div>
+      </div>
+      {getControls()}
     </div>
   )
 })
