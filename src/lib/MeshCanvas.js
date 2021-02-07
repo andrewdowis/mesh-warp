@@ -115,26 +115,27 @@ export default class MeshCanvas {
     const canvi = [this.output]
     if (showFiller) canvi.push(this.filler)
     // console.log(`%c ${showFiller}`, "color: black; background-color: cyan; font-style: italic; padding: 2px;")
+    let img = this.src
+
+    let gm = this.gridManager
+    let { columns, rows } = gm
+    let w = canvi[0].width
+    let h = canvi[0].height
+
+    let subwidth = img.width / columns
+    let subheight = img.height / rows
+
+    const target = gm.positions.length - 1 - columns - 2
+    const rewind_amount = columns + 1
+    const skip_amount = rewind_amount * rows - 1
+
     canvi.forEach((canvas, c) => {
-      let img = this.src
-
-      let gm = this.gridManager
-      let { columns, rows } = gm
-
       let ctx = canvas.getContext("2d")
-      let w = canvas.width
-      let h = canvas.height
 
       const offset = c * 4
 
-      let w_sliced = img.width / columns
-      let h_sliced = img.height / rows
-
       ctx.clearRect(0, 0, w, h)
       // render the images
-      const target = gm.positions.length - 1 - columns - 2
-      const rewind_amount = columns + 1
-      const skip_amount = rewind_amount * rows - 1
 
       for (let i = target; i > -1; i -= rewind_amount) {
         const c1 = gm.positions[i]
@@ -154,40 +155,40 @@ export default class MeshCanvas {
         let y4 = c4.y + offset
 
         // the bottom-right face
-        let xn = this.linearSolution(w_sliced, h_sliced, x4, w_sliced, 0, x2, 0, h_sliced, x3)
-        let yn = this.linearSolution(w_sliced, h_sliced, y4, w_sliced, 0, y2, 0, h_sliced, y3)
+        let xn = this.linearSolution(subwidth, subheight, x4, subwidth, 0, x2, 0, subheight, x3)
+        let yn = this.linearSolution(subwidth, subheight, y4, subwidth, 0, y2, 0, subheight, y3)
 
         ctx.save()
         ctx.setTransform(xn[0], yn[0], xn[1], yn[1], xn[2], yn[2])
         ctx.beginPath()
-        ctx.moveTo(w_sliced, h_sliced)
-        ctx.lineTo(w_sliced, 0)
-        ctx.lineTo(0, h_sliced)
+        ctx.moveTo(subwidth, subheight)
+        ctx.lineTo(subwidth, 0)
+        ctx.lineTo(0, subheight)
         ctx.closePath()
         ctx.fillStyle = "transparent"
         // ctx.fillStyle = "pink"
         ctx.fill()
         ctx.clip()
-        ctx.drawImage(img, rootX, rootY, w_sliced, h_sliced, 0, 0, w_sliced, h_sliced)
+        ctx.drawImage(img, rootX, rootY, subwidth, subheight, 0, 0, subwidth, subheight)
 
         ctx.restore()
 
         // the top-left face
-        let xm = this.linearSolution(0, 0, x1, w_sliced, 0, x2, 0, h_sliced, x3)
-        let ym = this.linearSolution(0, 0, y1, w_sliced, 0, y2, 0, h_sliced, y3)
+        let xm = this.linearSolution(0, 0, x1, subwidth, 0, x2, 0, subheight, x3)
+        let ym = this.linearSolution(0, 0, y1, subwidth, 0, y2, 0, subheight, y3)
 
         ctx.save()
         ctx.setTransform(xm[0], ym[0], xm[1], ym[1], xm[2], ym[2])
         ctx.beginPath()
         ctx.moveTo(0, 0)
-        ctx.lineTo(w_sliced, 0)
-        ctx.lineTo(0, h_sliced)
+        ctx.lineTo(subwidth, 0)
+        ctx.lineTo(0, subheight)
         ctx.closePath()
         ctx.fillStyle = "transparent"
         // ctx.fillStyle = "purple"
         ctx.fill()
         ctx.clip()
-        ctx.drawImage(img, rootX, rootY, w_sliced, h_sliced, 0, 0, w_sliced, h_sliced)
+        ctx.drawImage(img, rootX, rootY, subwidth, subheight, 0, 0, subwidth, subheight)
         ctx.restore()
 
         if (i && i - rewind_amount < 0) i += skip_amount
