@@ -35,8 +35,8 @@ export default class CanvasDummy {
     data = data || {
       width: this.parent.width,
       height: this.parent.height,
-      columns: 16,
-      rows: 16,
+      columns: 2,
+      rows: 2,
     }
 
     gridManager.init(data)
@@ -48,6 +48,7 @@ export default class CanvasDummy {
   }
 
   doublePoints(newPositions) {
+    console.warn(newPositions)
     this.meshCanvas.doublePoints(newPositions)
     this.refresh()
   }

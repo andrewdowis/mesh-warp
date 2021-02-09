@@ -61,6 +61,7 @@ export default class GridManager {
         const data = {
           x: (i % columns) * colWidth,
           y: Math.floor(i / columns) * rowHeight,
+          i,
         }
 
         this.rootPositions.push(data)

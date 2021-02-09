@@ -270,6 +270,8 @@ const Builder = React.forwardRef((props, ref) => {
                   } else {
                     new_points.push(array2.shift())
                   }
+
+                  new_points[new_points.length - 1].i = new_points.length - 1
                   if (i === col_total - 1) direction = nextValue
                 }
               }
@@ -385,7 +387,7 @@ const Builder = React.forwardRef((props, ref) => {
               height: dummy.meshCanvas.output.height,
             }}
           >
-            {controlPoints.map(coord => {
+            {controlPoints.map((coord, index) => {
               {
                 /* console.warn("coord", coord.i) */
               }
@@ -395,7 +397,7 @@ const Builder = React.forwardRef((props, ref) => {
                   onMouseDown={event => {
                     dispatch(event, coord.i, dummyIndex, dotsHolder.current)
                   }}
-                  key={`dot_${coord.i}`}
+                  key={`dot_${index}`}
                   className="grid-dot"
                   style={{
                     left: coord.x,
