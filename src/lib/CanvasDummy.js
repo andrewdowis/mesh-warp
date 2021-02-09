@@ -31,12 +31,12 @@ export default class CanvasDummy {
   initMesh(width, height, data) {
     const gridManager = new GridManager()
 
-    // data = null
+    data = null
     data = data || {
       width: this.parent.width,
       height: this.parent.height,
-      columns: 10,
-      rows: 20,
+      columns: 16,
+      rows: 16,
     }
 
     gridManager.init(data)

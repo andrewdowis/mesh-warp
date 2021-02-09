@@ -24,6 +24,9 @@ const Builder = React.forwardRef((props, ref) => {
   const [transparency, setTransparency] = useState(false)
   const [showDots, setShowDots] = useState(true)
   const [wireframeOpacity, setWireframeOpacity] = useState(1)
+  const [iterations, setIterations] = useState(-1)
+  const prevIteration = useRef(iterations)
+  const [controlPoints, setControlPoints] = useState([])
 
   const gridItems = useRef([]).current
 
@@ -79,6 +82,9 @@ const Builder = React.forwardRef((props, ref) => {
       canvasHolder.current.appendChild(dummy.meshCanvas.wireframe)
 
       dummy.meshCanvas.wireframe.style.opacity = wireframeOpacity
+
+      console.log("calling iterations")
+      setIterations(0)
     }
   }, [dummy])
 
@@ -88,7 +94,77 @@ const Builder = React.forwardRef((props, ref) => {
     }
   }, [wireframeOpacity])
 
-  if (!dummy) return null
+  function updateIterations(add_or_subtract) {
+    let next
+    switch (add_or_subtract) {
+      case "+":
+      case "add":
+        next = Math.min(6, iterations + 1)
+        break
+      default:
+        next = Math.max(0, iterations - 1)
+        break
+    }
+
+    const square = Math.pow(2, next)
+
+    let cols = dummy.meshCanvas.gridManager.columns
+    let rows = dummy.meshCanvas.gridManager.rows
+
+    if (square > rows || square > cols) {
+      console.error("NOPE")
+      return
+    }
+
+    console.warn("EXT", next)
+    updateControlPoints(next)
+    // console.table(dummy.meshCanvas.gridManager.positions)
+    // console.table(viewPoints)
+
+    setIterations(next)
+
+    prevIteration.current = next
+  }
+
+  useEffect(() => {
+    if (dummy && iterations === 0 && prevIteration.current < 0) {
+      prevIteration.current = iterations
+      updateIterations()
+    }
+  }, [iterations])
+
+  function updateControlPoints(next) {
+    next = next >= 0 ? next : iterations
+    let cols = dummy.meshCanvas.gridManager.columns
+    let rows = dummy.meshCanvas.gridManager.rows
+
+    const square = Math.pow(2, next)
+
+    cols /= square
+    rows /= square
+
+    const cols1 = dummy.meshCanvas.gridManager.columns + 1
+    const rows1 = dummy.meshCanvas.gridManager.rows + 1
+    // let index = 0
+    // const viewPoints = [dummy.meshCanvas.gridManager.positions[0]]
+    const viewPoints = []
+    for (let i = 0; i < dummy.meshCanvas.gridManager.positions.length; i += cols * cols1) {
+      // index = i
+      let point = dummy.meshCanvas.gridManager.positions[i]
+      viewPoints.push(point)
+
+      for (let c = rows; c < cols1; c += rows) {
+        point = dummy.meshCanvas.gridManager.positions[i + c]
+        viewPoints.push(point)
+      }
+    }
+    dummy.meshCanvas.gridManager.setControlPoints(viewPoints)
+    setControlPoints(viewPoints)
+  }
+
+  useEffect(() => {
+    if (dummy) updateControlPoints()
+  }, [props.forceUpdate])
 
   function getControls(type) {
     // return null
@@ -221,6 +297,25 @@ const Builder = React.forwardRef((props, ref) => {
           >
             <p>Double Points</p>
           </div>
+          <div className="button-input">
+            <p>{`Iterations: ${Math.pow(2, iterations)}`}</p>
+            <div
+              className="iterate-button"
+              onClick={() => {
+                updateIterations("+")
+              }}
+            >
+              +
+            </div>
+            <div
+              className="iterate-button"
+              onClick={() => {
+                updateIterations("-")
+              }}
+            >
+              -
+            </div>
+          </div>
           <div
             className="button"
             onClick={() => {
@@ -256,6 +351,8 @@ const Builder = React.forwardRef((props, ref) => {
     )
   }
 
+  if (!dummy) return null
+
   return (
     <div className="builder">
       <div className="holder">
@@ -288,13 +385,17 @@ const Builder = React.forwardRef((props, ref) => {
               height: dummy.meshCanvas.output.height,
             }}
           >
-            {dummy.meshCanvas.gridManager.positions.map((coord, index) => {
+            {controlPoints.map(coord => {
+              {
+                /* console.warn("coord", coord.i) */
+              }
+
               return (
                 <div
                   onMouseDown={event => {
-                    dispatch(event, index, dummyIndex, dotsHolder.current)
+                    dispatch(event, coord.i, dummyIndex, dotsHolder.current)
                   }}
-                  key={`dot_${index}`}
+                  key={`dot_${coord.i}`}
                   className="grid-dot"
                   style={{
                     left: coord.x,

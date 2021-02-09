@@ -24,20 +24,13 @@ export default class GridManager {
           const data = {
             x: (i % columns) * colWidth,
             y: Math.floor(i / columns) * rowHeight,
+            i,
           }
           this.positions.push(data)
 
           this.rootPositions.push({ ...data })
         }
       }
-
-      this.grids = []
-
-      for (let i = 0; i < this.positions.length - columns; i++)
-        this.grids.push({
-          t1: [0, 1, columns],
-          t2: [1, columns, 1 + columns],
-        })
     }
   }
 
@@ -75,10 +68,17 @@ export default class GridManager {
     }
   }
 
-  updateDot(index, x, y) {
-    this.positions[index] = {
+  updateDot(i, x, y) {
+    this.positions[i] = {
       x,
       y,
+      i,
     }
+  }
+
+  setControlPoints(array) {
+    this.controlPoints = array.map(point => {
+      return { x: point.x, y: point.y, i: point.i }
+    })
   }
 }

@@ -122,7 +122,7 @@ export default function App() {
       case Actions.MOUSE_MOVE:
         const targetMeshable = CanvasDummyBuilder.meshables[gridTarget.current]
         if (dotIndexRef.current === Infinity) {
-          targetMeshable.meshCanvas.gridManager.positions.forEach((position, i) => {
+          targetMeshable.meshCanvas.gridManager.controlPositions.forEach((position, i) => {
             // console.log(i, targetMeshable.updateDot)
             targetMeshable.updateDot(
               i,
@@ -204,13 +204,13 @@ export default function App() {
     <Router history={history}>
       <Switch>
         <Route
-          path="/admin"
-          // path="/"
+          // path="/admin"
+          path="/"
           render={props => {
-            return <Builder sourceBitmapData={sourceBitmapData} dispatch={handleMouseEvent} />
+            return <Builder sourceBitmapData={sourceBitmapData} dispatch={handleMouseEvent} forceUpdate={forceUpdate} />
           }}
         />
-        <Route path="" render={props => <Preview thumbs={assetData.current} layers={layerData.current} />} />
+        {/* <Route path="" render={props => <Preview thumbs={assetData.current} layers={layerData.current} />} /> */}
       </Switch>
     </Router>
   )

@@ -4,3 +4,5 @@ Sunday: 10
 Monday: 2
 Wedneday: 3.5
 Thursday: 1
+
+Monday: 8:30 -> 11:30

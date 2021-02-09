@@ -22,6 +22,30 @@
         margin: auto;
       }
 
+      .button-input {
+        -moz-user-select: none;
+        -webkit-user-select: none;
+
+        padding: 20px;
+
+        .iterate-button {
+          width: 30px;
+          height: 30px;
+          background-color: rgb(71, 0, 71);
+          cursor: pointer;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          -moz-user-select: none;
+          -webkit-user-select: none;
+
+          &:hover {
+            color: black;
+            background-color: limegreen;
+          }
+        }
+      }
+
       .button {
         cursor: pointer;
         -moz-user-select: none;
@@ -30,6 +54,7 @@
         padding: 20px;
 
         &:hover {
+          color: black;
           background-color: limegreen;
         }
       }
