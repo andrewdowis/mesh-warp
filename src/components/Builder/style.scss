@@ -94,9 +94,9 @@
         $offset-dot-size: calc(#{$dot-size} / -2);
         $offset: calc(#{$offset-dot-size} + #{$offset-border-size});
 
-        $border-size-hover: 6px;
+        $border-size-hover: 4px;
         $offset-border-size-hover: calc(#{$border-size-hover} / -1);
-        $dot-size-hover: 20px;
+        $dot-size-hover: 8px;
         $offset-dot-size-hover: calc(#{$dot-size-hover} / -2);
         $offset-hover: calc(#{$offset-dot-size-hover} + #{$offset-border-size-hover});
         .grid-dot {

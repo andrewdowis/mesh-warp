@@ -32,11 +32,22 @@ export default class CanvasDummy {
     const gridManager = new GridManager()
 
     data = null
-    data = data || {
-      width: this.parent.width,
-      height: this.parent.height,
-      columns: 2,
-      rows: 2,
+    let thing = true
+    thing = false
+    if (thing) {
+      data = data || {
+        width: this.parent.width,
+        height: this.parent.height,
+        columns: 2,
+        rows: 2,
+      }
+    } else {
+      data = data || {
+        width: this.parent.width,
+        height: this.parent.height,
+        columns: 4,
+        rows: 4,
+      }
     }
 
     gridManager.init(data)
@@ -53,8 +64,8 @@ export default class CanvasDummy {
     this.refresh()
   }
 
-  updateDot(index, x, y) {
-    this.meshCanvas.gridManager.updateDot(index, x, y)
+  updateDot(index, x, y, iterations) {
+    this.meshCanvas.gridManager.updateDot(index, x, y, iterations)
     this.meshCanvas.refresh()
   }
 

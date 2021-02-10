@@ -61,6 +61,7 @@ export default function App() {
   const dotIndexRef = useRef()
   const boundingRect = useRef()
   const mouseDownPos = useRef()
+  const iterationsRef = useRef()
   const [forceUpdate, setForceUpdate] = useState()
 
   const assets = [
@@ -94,7 +95,7 @@ export default function App() {
 
   ////////////////////////////////////////////////////////////
 
-  function handleMouseEvent(event, index, dummyIndex, parent) {
+  function handleMouseEvent(event, index, dummyIndex, parent, iterations) {
     event.preventDefault()
     event.stopPropagation()
     switch (event.type) {
@@ -104,6 +105,7 @@ export default function App() {
         gridTarget.current = dummyIndex
         dotIndexRef.current = index
         boundingRect.current = parent.getBoundingClientRect()
+        iterationsRef.current = iterations
 
         mouseDownPos.current = {
           x: event.pageX,
@@ -121,27 +123,30 @@ export default function App() {
         break
       case Actions.MOUSE_MOVE:
         const targetMeshable = CanvasDummyBuilder.meshables[gridTarget.current]
+
+        // Infinity means move everything as a large group
         if (dotIndexRef.current === Infinity) {
-          targetMeshable.meshCanvas.gridManager.controlPositions.forEach((position, i) => {
-            // console.log(i, targetMeshable.updateDot)
-            targetMeshable.updateDot(
-              i,
-              position.x - (mouseDownPos.current.x - event.pageX),
-              position.y - (mouseDownPos.current.y - event.pageY)
-            )
-          })
-          mouseDownPos.current = {
-            x: event.pageX,
-            y: event.pageY,
-          }
+          // targetMeshable.meshCanvas.gridManager.controlPositions.forEach((position, i) => {
+          //   // console.log(i, targetMeshable.updateDot)
+          //   targetMeshable.updateDot(
+          //     i,
+          //     position.x - (mouseDownPos.current.x - event.pageX),
+          //     position.y - (mouseDownPos.current.y - event.pageY)
+          //   )
+          // })
+          // mouseDownPos.current = {
+          //   x: event.pageX,
+          //   y: event.pageY,
+          // }
         } else {
           targetMeshable.updateDot(
             dotIndexRef.current,
             event.pageX - boundingRect.current.x,
-            event.pageY - boundingRect.current.y - document.documentElement.scrollTop
+            event.pageY - boundingRect.current.y - document.documentElement.scrollTop,
+            iterationsRef.current
           )
         }
-        // GridManager.updateDot(dotIndexRef.current, event.pageX, event.pageY)
+
         setForceUpdate(Math.random())
         break
       default:

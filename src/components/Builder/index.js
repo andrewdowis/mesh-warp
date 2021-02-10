@@ -84,7 +84,7 @@ const Builder = React.forwardRef((props, ref) => {
       dummy.meshCanvas.wireframe.style.opacity = wireframeOpacity
 
       console.log("calling iterations")
-      setIterations(0)
+      setIterations(1)
     }
   }, [dummy])
 
@@ -148,14 +148,19 @@ const Builder = React.forwardRef((props, ref) => {
     // let index = 0
     // const viewPoints = [dummy.meshCanvas.gridManager.positions[0]]
     const viewPoints = []
+    controlPoints.forEach(index => {
+      dummy.meshCanvas.gridManager.positions[index].isControl = false
+    })
     for (let i = 0; i < dummy.meshCanvas.gridManager.positions.length; i += cols * cols1) {
       // index = i
       let point = dummy.meshCanvas.gridManager.positions[i]
-      viewPoints.push(point)
+      point.isControl = true
+      viewPoints.push(i)
 
       for (let c = rows; c < cols1; c += rows) {
         point = dummy.meshCanvas.gridManager.positions[i + c]
-        viewPoints.push(point)
+        point.isControl = true
+        viewPoints.push(i + c)
       }
     }
     dummy.meshCanvas.gridManager.setControlPoints(viewPoints)
@@ -387,26 +392,22 @@ const Builder = React.forwardRef((props, ref) => {
               height: dummy.meshCanvas.output.height,
             }}
           >
-            {controlPoints.map((coord, index) => {
-              {
-                /* console.warn("coord", coord.i) */
-              }
-
+            {controlPoints.map(index => {
               return (
                 <div
                   onMouseDown={event => {
-                    dispatch(event, coord.i, dummyIndex, dotsHolder.current)
+                    dispatch(event, index, dummyIndex, dotsHolder.current, Math.pow(2, iterations))
                   }}
                   key={`dot_${index}`}
                   className="grid-dot"
                   style={{
-                    left: coord.x,
-                    top: coord.y,
+                    left: dummy.meshCanvas.gridManager.positions[index].x,
+                    top: dummy.meshCanvas.gridManager.positions[index].y,
                   }}
                 >
                   <div className="cross-01" />
                   <div className="cross-02" />
-                  {/* <p>{index}</p> */}
+                  <p>{index}</p>
                 </div>
               )
             })}
