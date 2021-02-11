@@ -84,7 +84,7 @@ const Builder = React.forwardRef((props, ref) => {
       dummy.meshCanvas.wireframe.style.opacity = wireframeOpacity
 
       console.log("calling iterations")
-      setIterations(1)
+      setTimeout(updateIterations, 100)
     }
   }, [dummy])
 
@@ -127,6 +127,7 @@ const Builder = React.forwardRef((props, ref) => {
   }
 
   useEffect(() => {
+    console.log(dummy, iterations, prevIteration.current)
     if (dummy && iterations === 0 && prevIteration.current < 0) {
       prevIteration.current = iterations
       updateIterations()
@@ -299,6 +300,7 @@ const Builder = React.forwardRef((props, ref) => {
                 }
               }
               dummy.doublePoints(new_points)
+              updateControlPoints(iterations)
               setForceUpdate(Math.random())
             }}
           >
@@ -392,25 +394,43 @@ const Builder = React.forwardRef((props, ref) => {
               height: dummy.meshCanvas.output.height,
             }}
           >
-            {controlPoints.map(index => {
-              return (
-                <div
-                  onMouseDown={event => {
-                    dispatch(event, index, dummyIndex, dotsHolder.current, Math.pow(2, iterations))
-                  }}
-                  key={`dot_${index}`}
-                  className="grid-dot"
-                  style={{
-                    left: dummy.meshCanvas.gridManager.positions[index].x,
-                    top: dummy.meshCanvas.gridManager.positions[index].y,
-                  }}
-                >
-                  <div className="cross-01" />
-                  <div className="cross-02" />
-                  <p>{index}</p>
-                </div>
-              )
-            })}
+            <>
+              {controlPoints.map(index => {
+                return (
+                  <div
+                    onMouseDown={event => {
+                      dispatch(event, index, dummyIndex, dotsHolder.current, Math.pow(2, iterations))
+                    }}
+                    key={`dot_${index}`}
+                    className="grid-dot"
+                    style={{
+                      left: dummy.meshCanvas.gridManager.positions[index].x,
+                      top: dummy.meshCanvas.gridManager.positions[index].y,
+                    }}
+                  >
+                    <div className="cross-01" />
+                    <div className="cross-02" />
+                    {/* <p>{index}</p> */}
+                  </div>
+                )
+              })}
+              {/* {dummy.meshCanvas.gridManager.positions
+                .filter((point, index) => !controlPoints.includes(index))
+                .map((point, index) => {
+                  return (
+                    <div
+                      key={`dot_${point.i}`}
+                      className="grid-dot-small"
+                      style={{
+                        left: point.x,
+                        top: point.y,
+                      }}
+                    >
+                      <p>{point.i}</p>
+                    </div>
+                  )
+                })} */}
+            </>
             {/* </div> */}
           </div>
         </div>

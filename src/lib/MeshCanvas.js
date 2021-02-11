@@ -32,12 +32,9 @@ export default class MeshCanvas {
 
     this.output.width = width
     this.output.height = height
-    // this.output.style.backgroundColor = "black"
 
     this.filler.width = width
     this.filler.height = height
-    // this.filler.style.left = `${this.output.width / 2}px`
-    // this.filler.style.backgroundColor = "red"
 
     this.wireframe.width = width
     this.wireframe.height = height
@@ -54,8 +51,8 @@ export default class MeshCanvas {
     let ctx_wireframe = this.wireframe.getContext("2d")
 
     ctx_wireframe.clearRect(0, 0, this.wireframe.width, this.wireframe.height)
-    ctx_wireframe.strokeStyle = "lime"
-    ctx_wireframe.lineWidth = 1
+    ctx_wireframe.strokeStyle = "red"
+    ctx_wireframe.lineWidth = 0.5
     for (let i = 0; i < this.gridManager.positions.length; i++) {
       const coord = this.gridManager.positions[i]
       let neighbor = this.gridManager.positions[i + 1]
@@ -73,8 +70,8 @@ export default class MeshCanvas {
       ctx_wireframe.closePath()
     }
 
-    ctx_wireframe.strokeStyle = "cyan"
-    ctx_wireframe.lineWidth = 1
+    ctx_wireframe.strokeStyle = "orange"
+    ctx_wireframe.lineWidth = 0.5
     for (let i = 0; i < this.gridManager.positions.length; i++) {
       if (i % (this.gridManager.columns + 1) === 0) continue
 

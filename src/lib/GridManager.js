@@ -7,43 +7,19 @@ export default class GridManager {
       this.rows = rows
       this.columns = columns
 
-      const colWidth = width / columns
-      const rowHeight = height / rows
-
-      // given 1x1, should return 2x2, 4 total, 0-3
-      // given 3x2, should return 4x3, 12 total, 0-11
-      columns++
-      rows++
-
-      const total = rows * columns
-      this.positions = positions || []
-      this.rootPositions = rootPositions || []
-
-      if (!this.rootPositions.length) {
-        for (let i = 0; i < total; i++) {
-          const data = {
-            x: (i % columns) * colWidth,
-            y: Math.floor(i / columns) * rowHeight,
-            i,
-          }
-          this.positions.push(data)
-
-          this.rootPositions.push({ ...data })
-        }
-      }
+      this.makePoints()
     }
   }
 
   doublePoints(newPositions) {
-    // console.warn(`Going from ${this.columns}x${this.rows}`)
-    // console.log(`\t ${this.positions.slice().length}`)
     this.columns *= 2
     this.rows *= 2
     this.positions = newPositions
 
-    // console.warn(`\t to ${this.columns}x${this.rows}`)
-    // console.log(`\t ${this.positions.length}`)
+    this.makePoints()
+  }
 
+  makePoints() {
     let columns = this.columns
     let rows = this.rows
     const colWidth = this.width / columns
@@ -56,16 +32,31 @@ export default class GridManager {
 
     const total = rows * columns
     this.rootPositions = []
+    let make_positions
+    if (!this.positions) {
+      this.positions = []
+      make_positions = true
+    }
     if (!this.rootPositions.length) {
       for (let i = 0; i < total; i++) {
-        const data = {
+        if (make_positions)
+          this.positions.push({
+            x: (i % columns) * colWidth,
+            y: Math.floor(i / columns) * rowHeight,
+            i,
+          })
+        this.rootPositions.push({
           x: (i % columns) * colWidth,
           y: Math.floor(i / columns) * rowHeight,
           i,
-        }
-
-        this.rootPositions.push(data)
+        })
       }
+    }
+    this.corners = {
+      tl: 0,
+      tr: this.rows,
+      bl: (this.columns + 1) * this.rows,
+      br: (this.columns + 1) * this.rows + this.rows,
     }
   }
 
@@ -77,40 +68,31 @@ export default class GridManager {
     }
 
     const self = this
-    // const index = i
-    // const squareValue = square
+    const limit = this.columns / 2
+    console.log(limit, this.columns, square)
+    // return
     function makeGo(index, squareValue) {
-      if (index === null || index === undefined || !(index >= 0) || squareValue > 2) return
-      const props = self.buildCommon(index, squareValue)
-      const nextUL = self.moveUpperLeft(props)
-      const nextUR = self.moveUpperRight(props)
-      const nextLR = self.moveLowerRight(props)
-      const nextLL = self.moveLowerLeft(props)
+      if (squareValue > limit || index === null || index === undefined || !(index >= 0)) return
+
+      const props = {
+        divisions: self.columns / squareValue,
+        amount: Math.pow(self.columns, 2) / squareValue,
+        center: index,
+      }
+      const corners = [
+        self.moveUpperLeft(props),
+        self.moveUpperRight(props),
+        self.moveLowerRight(props),
+        self.moveLowerLeft(props),
+      ]
 
       const double = squareValue * 2
-      makeGo(nextUL, double)
-      makeGo(nextUR, double)
-      makeGo(nextLR, double)
-      makeGo(nextLL, double)
-
-      // // console.warn(self.moveUpperRight(props))
-      // // console.warn(self.moveLowerRight(props))
-      // // console.warn(self.moveLowerLeft(props))
+      corners.forEach(corner => {
+        for (let item in corner) makeGo(corner[item], double)
+      })
     }
 
     makeGo(i, square)
-  }
-
-  buildCommon(i, square) {
-    const divisions = this.columns / square
-    const colsX = divisions + 2 * square
-    const amount = Math.pow(this.columns, 2) / square
-
-    let center = i
-
-    // console.log({ square, divisions, colsX, amount })
-
-    return { divisions, amount, center }
   }
 
   moveLowerLeft({ divisions, amount, center }) {
@@ -122,8 +104,6 @@ export default class GridManager {
     let hypoten = center + amount
     // above or below
     let adjacent = hypoten + divisions
-
-    // // console.log("\t", { center, opposite, adjacent, hypoten })
 
     return this.moveCommon({ center, opposite, adjacent, hypoten })
   }
@@ -137,8 +117,6 @@ export default class GridManager {
     // across in a corner
     let hypoten = adjacent + divisions
 
-    // // console.log("\t", { center, opposite, adjacent, hypoten })
-
     return this.moveCommon({ center, opposite, adjacent, hypoten })
   }
   moveUpperRight({ divisions, amount, center }) {
@@ -149,8 +127,6 @@ export default class GridManager {
     let hypoten = center - amount
     // above or below
     let adjacent = hypoten - divisions
-
-    // // console.log("\t", { center, opposite, adjacent, hypoten })
 
     return this.moveCommon({ center, opposite, adjacent, hypoten })
   }
@@ -165,8 +141,6 @@ export default class GridManager {
     // across in a corner
     let hypoten = adjacent - divisions
 
-    // console.log("\t", { center, opposite, adjacent, hypoten })
-
     return this.moveCommon({ center, opposite, adjacent, hypoten })
   }
 
@@ -176,14 +150,11 @@ export default class GridManager {
 
     let avg = (adjacent + opposite) / 2
 
-    const next = (hypoten + center) / 2
-
     let adjacentPos = this.positions[adjacent]
     let hypotenPos = this.positions[hypoten]
     let oppositePos = this.positions[opposite]
 
     let centerPos = this.positions[center]
-    // console.warn(avg)
     if (
       adjacentPos &&
       centerPos &&
@@ -198,32 +169,20 @@ export default class GridManager {
         y: (adjacentPos.y + oppositePos.y + hypotenPos.y + centerPos.y) / 4,
         i: avg,
       }
-      // console.log(center)
-      // console.warn(this.positions[avg])
-      this.crawlToAverage(center, adjacent)
-      this.crawlToAverage(center, opposite)
-    }
 
-    return next
-  }
-
-  crawlToAverage(center, end) {
-    const avg = (center + end) / 2
-    if (avg === end || Math.abs(center - 1) <= 1) return
-
-    // if (end % (this.columns + 1) === 0) return
-
-    const centerPos = this.positions[center]
-    const endPos = this.positions[end]
-    if (centerPos && endPos) {
-      this.positions[avg] = {
-        x: (endPos.x + centerPos.x) / 2,
-        y: (endPos.y + centerPos.y) / 2,
-        i: avg,
+      this.positions[mid1] = {
+        x: (centerPos.x + adjacentPos.x) / 2,
+        y: (centerPos.y + adjacentPos.y) / 2,
+        i: mid1,
+      }
+      this.positions[mid2] = {
+        x: (centerPos.x + oppositePos.x) / 2,
+        y: (centerPos.y + oppositePos.y) / 2,
+        i: mid2,
       }
     }
 
-    this.crawlToAverage(avg, end)
+    return { avg, mid1, mid2, center }
   }
 
   setControlPoints(array) {

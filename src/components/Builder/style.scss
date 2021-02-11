@@ -141,6 +141,23 @@
             transform: translate($offset-hover, $offset-hover);
           }
         }
+        .grid-dot-small {
+          position: absolute;
+          border: $border-size solid orangered;
+          width: $dot-size;
+          height: $dot-size;
+          border-radius: $dot-size;
+          transform: translate($offset, $offset);
+          cursor: pointer;
+
+          p {
+            position: relative;
+            font-size: 2em;
+            color: #ffff00;
+            transform: translate($offset, $offset);
+            text-shadow: 2px 2px 0px black, 2px 2px 0px black, 2px 2px 0px black;
+          }
+        }
       }
     }
   }
