@@ -56,9 +56,9 @@ export default class MeshCanvas {
     for (let i = 0; i < this.gridManager.positions.length; i++) {
       const coord = this.gridManager.positions[i]
       let neighbor = this.gridManager.positions[i + 1]
-      if (i && (i + 1) % (this.gridManager.columns + 1) === 0) neighbor = null
+      if (i && (i + 1) % this.gridManager.gCols === 0) neighbor = null
       ctx_wireframe.beginPath()
-      if (i >= this.gridManager.columns + 1) {
+      if (i >= this.gridManager.gCols) {
         const upper = this.gridManager.positions[i - this.gridManager.columns - 1]
         ctx_wireframe.moveTo(upper.x, upper.y)
         ctx_wireframe.lineTo(coord.x, coord.y)
@@ -70,23 +70,23 @@ export default class MeshCanvas {
       ctx_wireframe.closePath()
     }
 
-    ctx_wireframe.strokeStyle = "orange"
-    ctx_wireframe.lineWidth = 0.5
-    for (let i = 0; i < this.gridManager.positions.length; i++) {
-      if (i % (this.gridManager.columns + 1) === 0) continue
+    // ctx_wireframe.strokeStyle = "orange"
+    // ctx_wireframe.lineWidth = 0.5
+    // for (let i = 0; i < this.gridManager.positions.length; i++) {
+    //   if (i % this.gridManager.gCols === 0) continue
 
-      const coord = this.gridManager.positions[i]
-      let neighbor = this.gridManager.positions[i + this.gridManager.columns]
+    //   const coord = this.gridManager.positions[i]
+    //   let neighbor = this.gridManager.positions[i + this.gridManager.columns]
 
-      if (!neighbor) break
+    //   if (!neighbor) break
 
-      ctx_wireframe.beginPath()
-      ctx_wireframe.moveTo(coord.x, coord.y)
-      ctx_wireframe.lineTo(neighbor.x, neighbor.y)
+    //   ctx_wireframe.beginPath()
+    //   ctx_wireframe.moveTo(coord.x, coord.y)
+    //   ctx_wireframe.lineTo(neighbor.x, neighbor.y)
 
-      ctx_wireframe.stroke()
-      ctx_wireframe.closePath()
-    }
+    //   ctx_wireframe.stroke()
+    //   ctx_wireframe.closePath()
+    // }
 
     // console.warn(this.gridManager.controlPoints)
     // if (this.gridManager.controlPoints) {
@@ -169,7 +169,7 @@ export default class MeshCanvas {
         ctx.lineTo(0, subheight)
         ctx.closePath()
         ctx.fillStyle = "transparent"
-        // ctx.fillStyle = "pink"
+        // ctx.fillStyle = "black"
         ctx.fill()
         ctx.clip()
         ctx.drawImage(img, rootX, rootY, subwidth, subheight, 0, 0, subwidth, subheight)
@@ -188,7 +188,7 @@ export default class MeshCanvas {
         ctx.lineTo(0, subheight)
         ctx.closePath()
         ctx.fillStyle = "transparent"
-        // ctx.fillStyle = "purple"
+        // ctx.fillStyle = "black"
         ctx.fill()
         ctx.clip()
         ctx.drawImage(img, rootX, rootY, subwidth, subheight, 0, 0, subwidth, subheight)
@@ -204,7 +204,7 @@ export default class MeshCanvas {
     this.updateMeshLines()
   }
 
-  doublePoints(newPositions) {
-    this.gridManager.doublePoints(newPositions)
+  updateQuantity(add_or_subtract) {
+    this.gridManager.updateQuantity(add_or_subtract)
   }
 }

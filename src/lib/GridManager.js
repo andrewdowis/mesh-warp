@@ -1,5 +1,5 @@
 export default class GridManager {
-  init({ width, height, rows, columns, positions, rootPositions }) {
+  init({ width, height, rows, columns, rootPositions, positions }) {
     if (!this.build) {
       this.build = true
       this.width = width
@@ -7,56 +7,152 @@ export default class GridManager {
       this.rows = rows
       this.columns = columns
 
-      this.makePoints()
+      this.makePoints(rootPositions, positions)
     }
   }
 
-  doublePoints(newPositions) {
-    this.columns *= 2
-    this.rows *= 2
-    this.positions = newPositions
+  getAverage(...indexes) {
+    let x = 0
+    let y = 0
+    indexes.forEach(index => {
+      x += this.positions[index].x
+      y += this.positions[index].y
+    })
+    x /= indexes.length
+    y /= indexes.length
+
+    return { x, y }
+  }
+
+  updateQuantity(add_or_subtract) {
+    let new_points = []
+    switch (add_or_subtract) {
+      case "+":
+      case "add":
+        const old_points = this.positions
+        const new_points_01_columns = []
+        const new_points_02_rows = []
+        const new_points_03_square = []
+
+        for (let i = 0; i < old_points.length; i++) {
+          if (i + this.gCols < old_points.length) new_points_02_rows.push(this.getAverage(i, i + this.gCols))
+          if (i % this.gCols !== this.columns) {
+            if (i + 1 < old_points.length) new_points_01_columns.push(this.getAverage(i, i + 1))
+            if (i + this.gCols < old_points.length)
+              new_points_03_square.push(this.getAverage(i, i + 1, i + this.gCols, i + this.gCols + 1))
+          }
+        }
+
+        let direction = "across"
+        const col_total = this.columns + this.gCols
+        function pushNew(array1, array2, nextValue) {
+          for (let i = 0; i < col_total; i++) {
+            if (i % 2) {
+              new_points.push(array1.shift())
+            } else {
+              new_points.push(array2.shift())
+            }
+
+            new_points[new_points.length - 1].i = new_points.length - 1
+            if (i === col_total - 1) direction = nextValue
+          }
+        }
+        while (
+          old_points.length +
+          new_points_01_columns.length +
+          new_points_02_rows.length +
+          new_points_03_square.length
+        ) {
+          switch (direction) {
+            case "across":
+              pushNew(new_points_01_columns, old_points, "middle")
+              break
+            case "middle":
+              pushNew(new_points_03_square, new_points_02_rows, "across")
+
+              break
+            default:
+              break
+          }
+        }
+
+        this.columns *= 2
+        this.rows *= 2
+        break
+      case "-":
+      case "subtract":
+        let modulo = 1
+
+        for (let i = 0; i < this.gRows; i += 2) {
+          for (let c = 0; c < this.gCols; c += 2) {
+            const index = i * this.gCols + c
+            let coord = this.positions[index]
+            coord.i = index
+            new_points.push(coord)
+          }
+        }
+        // new_points = this.positions.filter((coord, i) => {
+        //   if (i % this.gCols === 0) modulo = +!modulo
+        //   return i % 2 === modulo
+        // })
+
+        // console.log(this.positions)
+        // console.log(new_points)
+
+        this.columns /= 2
+        this.rows /= 2
+        break
+      default:
+        break
+    }
+
+    this.gCols = this.columns + 1
+    this.gRows = this.rows + 1
+
+    this.positions = new_points
 
     this.makePoints()
   }
 
-  makePoints() {
-    let columns = this.columns
-    let rows = this.rows
-    const colWidth = this.width / columns
-    const rowHeight = this.height / rows
+  makePoints(rootPositions, positions) {
+    const colWidth = this.width / this.columns
+    const rowHeight = this.height / this.rows
 
-    // given 1x1, should return 2x2, 4 total, 0-3
-    // given 3x2, should return 4x3, 12 total, 0-11
-    columns++
-    rows++
+    this.gCols = this.columns + 1
+    this.gRows = this.rows + 1
 
-    const total = rows * columns
-    this.rootPositions = []
-    let make_positions
-    if (!this.positions) {
-      this.positions = []
-      make_positions = true
-    }
-    if (!this.rootPositions.length) {
-      for (let i = 0; i < total; i++) {
-        if (make_positions)
-          this.positions.push({
-            x: (i % columns) * colWidth,
-            y: Math.floor(i / columns) * rowHeight,
+    if (positions && rootPositions) {
+      this.positions = positions
+      this.rootPositions = rootPositions
+    } else {
+      const total = this.gRows * this.gCols
+      this.rootPositions = []
+      let make_positions
+      if (!this.positions) {
+        this.positions = []
+        make_positions = true
+      }
+      if (!this.rootPositions.length) {
+        for (let i = 0; i < total; i++) {
+          if (make_positions)
+            this.positions.push({
+              x: (i % this.gCols) * colWidth,
+              y: Math.floor(i / this.gCols) * rowHeight,
+              i,
+            })
+          this.rootPositions.push({
+            x: (i % this.gCols) * colWidth,
+            y: Math.floor(i / this.gCols) * rowHeight,
             i,
           })
-        this.rootPositions.push({
-          x: (i % columns) * colWidth,
-          y: Math.floor(i / columns) * rowHeight,
-          i,
-        })
+        }
       }
     }
     this.corners = {
       tl: 0,
       tr: this.rows,
-      bl: (this.columns + 1) * this.rows,
-      br: (this.columns + 1) * this.rows + this.rows,
+      bl: this.gCols * this.rows,
+      br: this.gCols * this.rows + this.rows,
     }
   }
 
@@ -67,36 +163,32 @@ export default class GridManager {
       i,
     }
 
-    const self = this
-    const limit = this.columns / 2
-    console.log(limit, this.columns, square)
-    // return
-    function makeGo(index, squareValue) {
-      if (squareValue > limit || index === null || index === undefined || !(index >= 0)) return
+    this.makeGo(i, square, this.columns / Math.max(1, square / 2))
+  }
 
-      const props = {
-        divisions: self.columns / squareValue,
-        amount: Math.pow(self.columns, 2) / squareValue,
-        center: index,
-      }
-      const corners = [
-        self.moveUpperLeft(props),
-        self.moveUpperRight(props),
-        self.moveLowerRight(props),
-        self.moveLowerLeft(props),
-      ]
+  makeGo(index, squareValue, checks) {
+    if (checks <= 1 || index === null || index === undefined || !(index >= 0)) return
 
-      const double = squareValue * 2
-      corners.forEach(corner => {
-        for (let item in corner) makeGo(corner[item], double)
-      })
+    const props = {
+      divisions: this.columns / squareValue,
+      amount: Math.pow(this.columns, 2) / squareValue,
+      center: index,
     }
+    const corners = [
+      this.moveUpperLeft(props),
+      this.moveUpperRight(props),
+      this.moveLowerRight(props),
+      this.moveLowerLeft(props),
+    ]
 
-    makeGo(i, square)
+    const double = squareValue * 2
+    corners.forEach(corner => {
+      for (let item in corner) this.makeGo(corner[item], double, checks / 2)
+    })
   }
 
   moveLowerLeft({ divisions, amount, center }) {
-    if (center % (this.columns + 1) === 0) return
+    if (center % this.gCols === 0) return
 
     // to the left or the right
     let opposite = center - divisions
@@ -108,7 +200,7 @@ export default class GridManager {
     return this.moveCommon({ center, opposite, adjacent, hypoten })
   }
   moveLowerRight({ divisions, amount, center }) {
-    if ((center + 1) % (this.columns + 1) === 0) return
+    if ((center + 1) % this.gCols === 0) return
 
     // to the left or the right
     let opposite = center + divisions
@@ -120,7 +212,7 @@ export default class GridManager {
     return this.moveCommon({ center, opposite, adjacent, hypoten })
   }
   moveUpperRight({ divisions, amount, center }) {
-    if ((center + 1) % (this.columns + 1) === 0) return
+    if ((center + 1) % this.gCols === 0) return
     // to the left or the right
     let opposite = center + divisions
     // across in a corner
@@ -132,7 +224,7 @@ export default class GridManager {
   }
 
   moveUpperLeft({ divisions, amount, center }) {
-    if (center % (this.columns + 1) === 0) return
+    if (center % this.gCols === 0) return
 
     // to the left or the right
     let opposite = center - divisions

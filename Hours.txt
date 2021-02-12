@@ -7,3 +7,5 @@ Thursday: 1
 
 Monday: 8:30 -> 11:30
 Tuesday: 9:00 -> 12
+Wedneday: 10 -> 12:30
+Thursday: 9:30 - 1

@@ -10,7 +10,7 @@ import { Actions } from "../../App"
 const Builder = React.forwardRef((props, ref) => {
   const { sourceBitmapData, dispatch } = props
 
-  const guideRight = require("../../assets/guides/guide_right_01.jpg").default
+  const guideRight = require("../../assets/guides/guide_right_01b.jpg").default
   const guideLeft01 = require("../../assets/guides/guide_left_01.jpg").default
   const guideLeft02 = require("../../assets/guides/guide_left_02.jpg").default
 
@@ -116,18 +116,13 @@ const Builder = React.forwardRef((props, ref) => {
       return
     }
 
-    console.warn("EXT", next)
     updateControlPoints(next)
-    // console.table(dummy.meshCanvas.gridManager.positions)
-    // console.table(viewPoints)
-
     setIterations(next)
 
     prevIteration.current = next
   }
 
   useEffect(() => {
-    console.log(dummy, iterations, prevIteration.current)
     if (dummy && iterations === 0 && prevIteration.current < 0) {
       prevIteration.current = iterations
       updateIterations()
@@ -144,24 +139,25 @@ const Builder = React.forwardRef((props, ref) => {
     cols /= square
     rows /= square
 
-    const cols1 = dummy.meshCanvas.gridManager.columns + 1
-    const rows1 = dummy.meshCanvas.gridManager.rows + 1
-    // let index = 0
-    // const viewPoints = [dummy.meshCanvas.gridManager.positions[0]]
-    const viewPoints = []
-    controlPoints.forEach(index => {
-      dummy.meshCanvas.gridManager.positions[index].isControl = false
+    const cols1 = dummy.meshCanvas.gridManager.gCols
+    let viewPoints = []
+    dummy.meshCanvas.gridManager.positions.forEach(coord => {
+      coord.isControl = false
     })
-    for (let i = 0; i < dummy.meshCanvas.gridManager.positions.length; i += cols * cols1) {
-      // index = i
-      let point = dummy.meshCanvas.gridManager.positions[i]
-      point.isControl = true
-      viewPoints.push(i)
-
-      for (let c = rows; c < cols1; c += rows) {
-        point = dummy.meshCanvas.gridManager.positions[i + c]
+    console.clear()
+    if (dummy.meshCanvas.gridManager.positions.length === 4) {
+      viewPoints = [0, 1, 2, 3]
+    } else {
+      for (let i = 0; i < dummy.meshCanvas.gridManager.positions.length; i += cols * cols1) {
+        let point = dummy.meshCanvas.gridManager.positions[i]
         point.isControl = true
-        viewPoints.push(i + c)
+        viewPoints.push(i)
+
+        for (let c = rows; c < cols1; c += rows) {
+          point = dummy.meshCanvas.gridManager.positions[i + c]
+          point.isControl = true
+          viewPoints.push(i + c)
+        }
       }
     }
     dummy.meshCanvas.gridManager.setControlPoints(viewPoints)
@@ -207,7 +203,7 @@ const Builder = React.forwardRef((props, ref) => {
               setWireframeOpacity(+!wireframeOpacity)
             }}
           >
-            <p>{`${wireframeOpacity ? "Show" : "Hide"} Wireframe`}</p>
+            <p>{`${!wireframeOpacity ? "Show" : "Hide"} Wireframe`}</p>
           </div>
         </div>
         <div className="button-holder">
@@ -233,78 +229,27 @@ const Builder = React.forwardRef((props, ref) => {
           </div>
         </div>
         <div className="button-holder">
-          <div
-            className="button"
-            onClick={() => {
-              const gm = dummy.meshCanvas.gridManager
-              const columns = gm.columns + 1
-
-              const old_points = gm.positions
-              const new_points_01_columns = []
-              const new_points_02_rows = []
-              const new_points_03_square = []
-              const new_points = []
-
-              function getAverage(...indexes) {
-                let x = 0
-                let y = 0
-                indexes.forEach(index => {
-                  x += old_points[index].x
-                  y += old_points[index].y
-                })
-                x /= indexes.length
-                y /= indexes.length
-
-                return { x, y }
-              }
-
-              for (let i = 0; i < old_points.length; i++) {
-                if (i + columns < old_points.length) new_points_02_rows.push(getAverage(i, i + columns))
-                if (i % columns !== gm.columns) {
-                  if (i + 1 < old_points.length) new_points_01_columns.push(getAverage(i, i + 1))
-                  if (i + columns < old_points.length)
-                    new_points_03_square.push(getAverage(i, i + 1, i + columns, i + columns + 1))
-                }
-              }
-
-              let direction = "across"
-              const col_total = gm.columns + columns
-              function pushNew(array1, array2, nextValue) {
-                for (let i = 0; i < col_total; i++) {
-                  if (i % 2) {
-                    new_points.push(array1.shift())
-                  } else {
-                    new_points.push(array2.shift())
-                  }
-
-                  new_points[new_points.length - 1].i = new_points.length - 1
-                  if (i === col_total - 1) direction = nextValue
-                }
-              }
-              while (
-                old_points.length +
-                new_points_01_columns.length +
-                new_points_02_rows.length +
-                new_points_03_square.length
-              ) {
-                switch (direction) {
-                  case "across":
-                    pushNew(new_points_01_columns, old_points, "middle")
-                    break
-                  case "middle":
-                    pushNew(new_points_03_square, new_points_02_rows, "across")
-
-                    break
-                  default:
-                    break
-                }
-              }
-              dummy.doublePoints(new_points)
-              updateControlPoints(iterations)
-              setForceUpdate(Math.random())
-            }}
-          >
-            <p>Double Points</p>
+          <div className="button-input">
+            <div
+              className="button"
+              onClick={() => {
+                dummy.updateQuantity("+")
+                updateControlPoints(iterations)
+                setForceUpdate(Math.random())
+              }}
+            >
+              <p>Double Points</p>
+            </div>
+            <div
+              className="button"
+              onClick={() => {
+                dummy.updateQuantity("-")
+                updateControlPoints(iterations)
+                setForceUpdate(Math.random())
+              }}
+            >
+              <p>Half Points</p>
+            </div>
           </div>
           <div className="button-input">
             <p>{`Iterations: ${Math.pow(2, iterations)}`}</p>
@@ -334,17 +279,25 @@ const Builder = React.forwardRef((props, ref) => {
               attributes.forEach(attribute => {
                 output += `"${attribute}": ${gm[attribute]} , `
               })
+
               output += `"positions": [ `
               gm.positions.forEach((coord, index) => {
-                output += `{ "x": ${coord.x}, "y": ${coord.y} }`
+                output += `{ "x": ${coord.x}, "y": ${coord.y}, "i": ${coord.i}, "isControl": ${coord.isControl ||
+                  false} }`
                 if (gm.positions[index + 1]) output += ", "
               })
-              output += `], "rootPositions": [ `
 
+              output += `], "rootPositions": [ `
               gm.rootPositions.forEach((coord, index) => {
-                output += `{ "x": ${coord.x}, "y": ${coord.y} }`
+                output += `{ "x": ${coord.x}, "y": ${coord.y}, "i": ${coord.i} }`
                 if (gm.positions[index + 1]) output += ", "
               })
+
+              // output += `], "viewPoints": [ `
+              // controlPoints.forEach(index => {
+              //   output += index
+              //   if (gm.positions[index + 1]) output += ", "
+              // })
               output += "]}"
 
               console.clear()

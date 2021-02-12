@@ -31,9 +31,9 @@ export default class CanvasDummy {
   initMesh(width, height, data) {
     const gridManager = new GridManager()
 
-    data = null
+    // data = null
     let thing = true
-    thing = false
+    // thing = false
     if (thing) {
       data = data || {
         width: this.parent.width,
@@ -58,9 +58,8 @@ export default class CanvasDummy {
     // this.parentDummy = parentDummy
   }
 
-  doublePoints(newPositions) {
-    console.warn(newPositions)
-    this.meshCanvas.doublePoints(newPositions)
+  updateQuantity(add_or_subtract) {
+    this.meshCanvas.updateQuantity(add_or_subtract)
     this.refresh()
   }
 

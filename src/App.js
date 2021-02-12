@@ -70,8 +70,8 @@ export default function App() {
     require("./assets/textures/asset_02.jpg").default,
     require("./assets/textures/asset_03.jpg").default,
     require("./assets/textures/asset_04.jpg").default,
-    require("./assets/textures/asset_looney2.jpg").default,
     require("./assets/textures/asset_bp2.jpg").default,
+    require("./assets/textures/asset_looney2.jpg").default,
     require("./assets/textures/asset_tmnt2.jpg").default,
   ]
   const assetData = useRef([])
@@ -126,18 +126,19 @@ export default function App() {
 
         // Infinity means move everything as a large group
         if (dotIndexRef.current === Infinity) {
-          // targetMeshable.meshCanvas.gridManager.controlPositions.forEach((position, i) => {
+          // targetMeshable.meshCanvas.gridManager.positions.forEach((coord, i) => {
           //   // console.log(i, targetMeshable.updateDot)
           //   targetMeshable.updateDot(
           //     i,
-          //     position.x - (mouseDownPos.current.x - event.pageX),
-          //     position.y - (mouseDownPos.current.y - event.pageY)
+          //     coord.x - (mouseDownPos.current.x - event.pageX),
+          //     coord.y - (mouseDownPos.current.y - event.pageY),
+          //     iterations
           //   )
           // })
-          // mouseDownPos.current = {
-          //   x: event.pageX,
-          //   y: event.pageY,
-          // }
+          mouseDownPos.current = {
+            x: event.pageX,
+            y: event.pageY,
+          }
         } else {
           targetMeshable.updateDot(
             dotIndexRef.current,
@@ -209,13 +210,13 @@ export default function App() {
     <Router history={history}>
       <Switch>
         <Route
-          // path="/admin"
-          path="/"
+          path="/admin"
+          // path="/"
           render={props => {
             return <Builder sourceBitmapData={sourceBitmapData} dispatch={handleMouseEvent} forceUpdate={forceUpdate} />
           }}
         />
-        {/* <Route path="" render={props => <Preview thumbs={assetData.current} layers={layerData.current} />} /> */}
+        <Route path="" render={props => <Preview thumbs={assetData.current} layers={layerData.current} />} />
       </Switch>
     </Router>
   )

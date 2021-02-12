@@ -51,7 +51,8 @@
         -moz-user-select: none;
         -webkit-user-select: none;
 
-        padding: 20px;
+        height: 6vh;
+        padding: 2vmax;
 
         &:hover {
           color: black;
@@ -88,9 +89,9 @@
         left: 100px;
         position: absolute;
 
-        $border-size: 3px;
+        $border-size: 1px;
         $offset-border-size: calc(#{$border-size} / -1);
-        $dot-size: 5px;
+        $dot-size: 4px;
         $offset-dot-size: calc(#{$dot-size} / -2);
         $offset: calc(#{$offset-dot-size} + #{$offset-border-size});
 
@@ -101,7 +102,8 @@
         $offset-hover: calc(#{$offset-dot-size-hover} + #{$offset-border-size-hover});
         .grid-dot {
           position: absolute;
-          border: $border-size solid orangered;
+          border: $border-size solid yellow;
+          // opacity: 0.5;
           width: $dot-size;
           height: $dot-size;
           border-radius: $dot-size;
