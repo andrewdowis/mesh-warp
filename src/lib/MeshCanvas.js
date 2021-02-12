@@ -52,7 +52,7 @@ export default class MeshCanvas {
 
     ctx_wireframe.clearRect(0, 0, this.wireframe.width, this.wireframe.height)
     ctx_wireframe.strokeStyle = "red"
-    ctx_wireframe.lineWidth = 0.5
+    ctx_wireframe.lineWidth = 1
     for (let i = 0; i < this.gridManager.positions.length; i++) {
       const coord = this.gridManager.positions[i]
       let neighbor = this.gridManager.positions[i + 1]
@@ -168,11 +168,12 @@ export default class MeshCanvas {
         ctx.lineTo(subwidth, 0)
         ctx.lineTo(0, subheight)
         ctx.closePath()
-        ctx.fillStyle = "transparent"
-        // ctx.fillStyle = "black"
+        // ctx.fillStyle = "transparent"
+        // ctx.fillStyle = "rgba(0, 0, 0, 0.5)"
+        ctx.fillStyle = "blue"
         ctx.fill()
-        ctx.clip()
-        ctx.drawImage(img, rootX, rootY, subwidth, subheight, 0, 0, subwidth, subheight)
+        // ctx.clip()
+        // ctx.drawImage(img, rootX, rootY, subwidth, subheight, 0, 0, subwidth, subheight)
 
         ctx.restore()
 
@@ -187,11 +188,12 @@ export default class MeshCanvas {
         ctx.lineTo(subwidth, 0)
         ctx.lineTo(0, subheight)
         ctx.closePath()
-        ctx.fillStyle = "transparent"
-        // ctx.fillStyle = "black"
+        // ctx.fillStyle = "transparent"
+        // ctx.fillStyle = "rgba(0, 0, 0, 0.5)"
+        ctx.fillStyle = "blue"
         ctx.fill()
-        ctx.clip()
-        ctx.drawImage(img, rootX, rootY, subwidth, subheight, 0, 0, subwidth, subheight)
+        // ctx.clip()
+        // ctx.drawImage(img, rootX, rootY, subwidth, subheight, 0, 0, subwidth, subheight)
         ctx.restore()
 
         if (i && i - rewind_amount < 0) i += skip_amount

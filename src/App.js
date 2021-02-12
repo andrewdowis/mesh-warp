@@ -210,13 +210,13 @@ export default function App() {
     <Router history={history}>
       <Switch>
         <Route
-          path="/admin"
-          // path="/"
+          // path="/admin"
+          path="/"
           render={props => {
             return <Builder sourceBitmapData={sourceBitmapData} dispatch={handleMouseEvent} forceUpdate={forceUpdate} />
           }}
         />
-        <Route path="" render={props => <Preview thumbs={assetData.current} layers={layerData.current} />} />
+        {/* <Route path="" render={props => <Preview thumbs={assetData.current} layers={layerData.current} />} /> */}
       </Switch>
     </Router>
   )

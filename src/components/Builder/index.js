@@ -10,9 +10,9 @@ import { Actions } from "../../App"
 const Builder = React.forwardRef((props, ref) => {
   const { sourceBitmapData, dispatch } = props
 
-  const guideRight = require("../../assets/guides/guide_right_01b.jpg").default
-  const guideLeft01 = require("../../assets/guides/guide_left_01.jpg").default
-  const guideLeft02 = require("../../assets/guides/guide_left_02.jpg").default
+  const guideRight = require("../../assets/guides/guide_right_32x32.jpg").default
+  const guideLeft01 = require("../../assets/guides/guide_left_01_32x32.jpg").default
+  const guideLeft02 = require("../../assets/guides/guide_left_02_32x32.jpg").default
 
   const images = useRef([guideRight, guideLeft01, guideLeft02]).current
   const bitmapData = useRef(new Array(images.length).fill(null)).current
@@ -20,7 +20,7 @@ const Builder = React.forwardRef((props, ref) => {
   const [imageArray, setImageArray] = useState()
   const [dummyIndex, setDummyIndex] = useState()
   const [dummy, setDummy] = useState()
-  const [opacity, setOpacity] = useState(1)
+  const [meshOpacity, setMeshOpacity] = useState(1)
   const [transparency, setTransparency] = useState(false)
   const [showDots, setShowDots] = useState(true)
   const [wireframeOpacity, setWireframeOpacity] = useState(1)
@@ -50,7 +50,7 @@ const Builder = React.forwardRef((props, ref) => {
           // })
           // }
 
-          setDummyIndex(0)
+          setDummyIndex(2)
         }
       }
 
@@ -81,12 +81,19 @@ const Builder = React.forwardRef((props, ref) => {
       canvasHolder.current.appendChild(dummy.meshCanvas.output)
       canvasHolder.current.appendChild(dummy.meshCanvas.wireframe)
 
+      dummy.meshCanvas.output.style.opacity = meshOpacity
       dummy.meshCanvas.wireframe.style.opacity = wireframeOpacity
 
       console.log("calling iterations")
       setTimeout(updateIterations, 100)
     }
   }, [dummy])
+
+  useEffect(() => {
+    if (dummy) {
+      dummy.meshCanvas.output.style.opacity = meshOpacity
+    }
+  }, [meshOpacity])
 
   useEffect(() => {
     if (dummy) {
@@ -190,10 +197,10 @@ const Builder = React.forwardRef((props, ref) => {
           <div
             className="button"
             onClick={() => {
-              setOpacity(opacity ? 0 : transparency)
+              setMeshOpacity(+!meshOpacity)
             }}
           >
-            <p>{`${!opacity ? "Show" : "Hide"} Mesh Warp`}</p>
+            <p>{`${!meshOpacity ? "Show" : "Hide"} Mesh Warp`}</p>
           </div>
         </div>
         <div className="button-holder">
@@ -220,9 +227,9 @@ const Builder = React.forwardRef((props, ref) => {
           <div
             className="button"
             onClick={() => {
-              const next_opacity = opacity === 1 ? 0.55 : 1
+              const next_opacity = meshOpacity === 1 ? 0.55 : 1
               setTransparency(next_opacity)
-              setOpacity(next_opacity)
+              setMeshOpacity(next_opacity)
             }}
           >
             <p>Toggle Transparency</p>
@@ -326,13 +333,7 @@ const Builder = React.forwardRef((props, ref) => {
           }}
         >
           <img draggable={false} src={bitmapData[dummyIndex].src} alt={`guide`} />
-          <div
-            className="canvas-holder"
-            ref={canvasHolder}
-            style={{
-              opacity,
-            }}
-          ></div>
+          <div className="canvas-holder" ref={canvasHolder}></div>
 
           <div
             ref={dotsHolder}
