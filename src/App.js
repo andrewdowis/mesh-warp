@@ -77,9 +77,10 @@ export default function App() {
   const assetData = useRef([])
 
   const layers = [
+    require("./assets/layers/layer_03_base.png").default,
     require("./assets/layers/layer_01.png").default,
     require("./assets/layers/layer_02_multiply.png").default,
-    require("./assets/layers/layer_03_base.png").default,
+    require("./assets/layers/layer_03_base_02.png").default,
     require("./assets/layers/sock_mask_left.png").default,
     require("./assets/layers/sock_mask_right.png").default,
   ]
@@ -210,13 +211,13 @@ export default function App() {
     <Router history={history}>
       <Switch>
         <Route
-          // path="/admin"
-          path="/"
+          path="/admin"
+          // path="/"
           render={props => {
             return <Builder sourceBitmapData={sourceBitmapData} dispatch={handleMouseEvent} forceUpdate={forceUpdate} />
           }}
         />
-        {/* <Route path="" render={props => <Preview thumbs={assetData.current} layers={layerData.current} />} /> */}
+        <Route path="" render={props => <Preview thumbs={assetData.current} layers={layerData.current} />} />
       </Switch>
     </Router>
   )
