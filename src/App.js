@@ -4,9 +4,9 @@ import history from "./history.js"
 
 import Builder from "./components/Builder"
 import Preview from "./components/Preview"
-// import CanvasDrawer from "./components/CanvasDrawer"
-// import MeshDrawer from "./components/MeshDrawer"
-// import Grid from "./components/Grid"
+import Gridder from "./components/Gridder"
+import Comps from "./components/Comps"
+
 import CanvasDummyBuilder from "./lib/CanvasDummyBuilder"
 
 import "./App.scss"
@@ -56,169 +56,168 @@ LEFT SOCK:
 */
 
 export default function App() {
-  const [bodyRef, setBody] = useState()
+  // const [bodyRef, setBody] = useState()
 
-  const dotIndexRef = useRef()
-  const boundingRect = useRef()
-  const mouseDownPos = useRef()
-  const iterationsRef = useRef()
-  const [forceUpdate, setForceUpdate] = useState()
+  // const dotIndexRef = useRef()
+  // const boundingRect = useRef()
+  // const mouseDownPos = useRef()
+  // const iterationsRef = useRef()
+  // const [forceUpdate, setForceUpdate] = useState()
 
-  const assets = [
-    // require("./assets/textures/asset_01a.jpg").default,
-    require("./assets/textures/asset_01.jpg").default,
-    require("./assets/textures/asset_02.jpg").default,
-    require("./assets/textures/asset_03.jpg").default,
-    require("./assets/textures/asset_04.jpg").default,
-    require("./assets/textures/asset_bp2.jpg").default,
-    require("./assets/textures/asset_looney2.jpg").default,
-    require("./assets/textures/asset_tmnt2.jpg").default,
-  ]
-  const assetData = useRef([])
+  // const assets = [
+  //   // require("./assets/textures/asset_01a.jpg").default,
+  //   require("./assets/textures/asset_01.jpg").default,
+  //   require("./assets/textures/asset_02.jpg").default,
+  //   require("./assets/textures/asset_03.jpg").default,
+  //   require("./assets/textures/asset_04.jpg").default,
+  //   require("./assets/textures/asset_bp2.jpg").default,
+  //   require("./assets/textures/asset_looney2.jpg").default,
+  //   require("./assets/textures/asset_tmnt2.jpg").default,
+  // ]
+  // const assetData = useRef([])
 
-  const layers = [
-    require("./assets/layers/layer_03_base.png").default,
-    require("./assets/layers/layer_01.png").default,
-    require("./assets/layers/layer_02_multiply.png").default,
-    require("./assets/layers/layer_03_base_02.png").default,
-    require("./assets/layers/sock_mask_left.png").default,
-    require("./assets/layers/sock_mask_right.png").default,
-  ]
-  const layerData = useRef([])
+  // const layers = [
+  //   require("./assets/layers/layer_03_base.png").default,
+  //   require("./assets/layers/layer_01.png").default,
+  //   require("./assets/layers/layer_02_multiply.png").default,
+  //   require("./assets/layers/layer_03_base_02.png").default,
+  //   require("./assets/layers/sock_mask_left.png").default,
+  //   require("./assets/layers/sock_mask_right.png").default,
+  // ]
+  // const layerData = useRef([])
 
-  // const whatever = useRef()
+  // // const whatever = useRef()
 
-  const [sourceBitmapData, setSourceBitmapData] = useState()
+  // const [sourceBitmapData, setSourceBitmapData] = useState()
 
-  const canvasHolder = useRef()
+  // const canvasHolder = useRef()
 
-  const gridTarget = useRef()
+  // const gridTarget = useRef()
 
-  ////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////
 
-  function handleMouseEvent(event, index, dummyIndex, parent, iterations) {
-    event.preventDefault()
-    event.stopPropagation()
-    switch (event.type) {
-      case Actions.MOUSE_DOWN:
-        bodyRef.addEventListener(Actions.MOUSE_MOVE, handleMouseEvent, false)
-        bodyRef.addEventListener(Actions.MOUSE_UP, handleMouseEvent, false)
-        gridTarget.current = dummyIndex
-        dotIndexRef.current = index
-        boundingRect.current = parent.getBoundingClientRect()
-        iterationsRef.current = iterations
+  // function handleMouseEvent(event, index, dummyIndex, parent, iterations) {
+  //   event.preventDefault()
+  //   event.stopPropagation()
+  //   switch (event.type) {
+  //     case Actions.MOUSE_DOWN:
+  //       bodyRef.addEventListener(Actions.MOUSE_MOVE, handleMouseEvent, false)
+  //       bodyRef.addEventListener(Actions.MOUSE_UP, handleMouseEvent, false)
+  //       gridTarget.current = dummyIndex
+  //       dotIndexRef.current = index
+  //       boundingRect.current = parent.getBoundingClientRect()
+  //       iterationsRef.current = iterations
 
-        mouseDownPos.current = {
-          x: event.pageX,
-          y: event.pageY,
-        }
+  //       mouseDownPos.current = {
+  //         x: event.pageX,
+  //         y: event.pageY,
+  //       }
 
-        break
-      case Actions.MOUSE_UP:
-        bodyRef.removeEventListener(Actions.MOUSE_MOVE, handleMouseEvent, false)
-        bodyRef.removeEventListener(Actions.MOUSE_UP, handleMouseEvent, false)
-        gridTarget.current = null
-        dotIndexRef.current = null
-        boundingRect.current = null
-        mouseDownPos.current = null
-        break
-      case Actions.MOUSE_MOVE:
-        const targetMeshable = CanvasDummyBuilder.meshables[gridTarget.current]
+  //       break
+  //     case Actions.MOUSE_UP:
+  //       bodyRef.removeEventListener(Actions.MOUSE_MOVE, handleMouseEvent, false)
+  //       bodyRef.removeEventListener(Actions.MOUSE_UP, handleMouseEvent, false)
+  //       gridTarget.current = null
+  //       dotIndexRef.current = null
+  //       boundingRect.current = null
+  //       mouseDownPos.current = null
+  //       break
+  //     case Actions.MOUSE_MOVE:
+  //       const targetMeshable = CanvasDummyBuilder.meshables[gridTarget.current]
 
-        // Infinity means move everything as a large group
-        if (dotIndexRef.current === Infinity) {
-          // targetMeshable.meshCanvas.gridManager.positions.forEach((coord, i) => {
-          //   // console.log(i, targetMeshable.updateDot)
-          //   targetMeshable.updateDot(
-          //     i,
-          //     coord.x - (mouseDownPos.current.x - event.pageX),
-          //     coord.y - (mouseDownPos.current.y - event.pageY),
-          //     iterations
-          //   )
-          // })
-          mouseDownPos.current = {
-            x: event.pageX,
-            y: event.pageY,
-          }
-        } else {
-          targetMeshable.updateDot(
-            dotIndexRef.current,
-            event.pageX - boundingRect.current.x,
-            event.pageY - boundingRect.current.y - document.documentElement.scrollTop,
-            iterationsRef.current
-          )
-        }
+  //       // Infinity means move everything as a large group
+  //       if (dotIndexRef.current === Infinity) {
+  //         // targetMeshable.meshCanvas.gridManager.positions.forEach((coord, i) => {
+  //         //   // console.log(i, targetMeshable.updateDot)
+  //         //   targetMeshable.updateDot(
+  //         //     i,
+  //         //     coord.x - (mouseDownPos.current.x - event.pageX),
+  //         //     coord.y - (mouseDownPos.current.y - event.pageY),
+  //         //     iterations
+  //         //   )
+  //         // })
+  //         mouseDownPos.current = {
+  //           x: event.pageX,
+  //           y: event.pageY,
+  //         }
+  //       } else {
+  //         targetMeshable.updateDot(
+  //           dotIndexRef.current,
+  //           event.pageX - boundingRect.current.x,
+  //           event.pageY - boundingRect.current.y - document.documentElement.scrollTop,
+  //           iterationsRef.current
+  //         )
+  //       }
 
-        setForceUpdate(Math.random())
-        break
-      default:
-        break
-    }
-  }
+  //       setForceUpdate(Math.random())
+  //       break
+  //     default:
+  //       break
+  //   }
+  // }
 
-  useEffect(() => {
-    if (!bodyRef) {
-      setBody(document.getElementsByTagName("body")[0])
-    }
-  }, [bodyRef])
+  // useEffect(() => {
+  //   if (!bodyRef) {
+  //     setBody(document.getElementsByTagName("body")[0])
+  //   }
+  // }, [bodyRef])
 
-  ////////////////////////////////////////////////////////////
-  useEffect(() => {
-    if (!sourceBitmapData) {
-      let completed = 0
-      function callback() {
-        if (++completed === assets.length + layers.length) {
-          const img = assetData.current[0]
+  // ////////////////////////////////////////////////////////////
+  // useEffect(() => {
+  //   if (!sourceBitmapData) {
+  //     let completed = 0
+  //     function callback() {
+  //       if (++completed === assets.length + layers.length) {
+  //         const img = assetData.current[0]
 
-          // setTimeout(() => {
-          setSourceBitmapData(img)
-          // }, 1000)
-          CanvasDummyBuilder.init(img)
-        }
-      }
+  //         // setTimeout(() => {
+  //         setSourceBitmapData(img)
+  //         // }, 1000)
+  //         CanvasDummyBuilder.init(img)
+  //       }
+  //     }
 
-      assets.forEach((url, i) => {
-        const img = new Image()
-        img.src = url
+  //     assets.forEach((url, i) => {
+  //       const img = new Image()
+  //       img.src = url
 
-        img.onload = () => {
-          assetData.current[i] = img
-          callback()
-        }
-      })
-      layers.forEach((url, i) => {
-        const img = new Image()
-        img.src = url
+  //       img.onload = () => {
+  //         assetData.current[i] = img
+  //         callback()
+  //       }
+  //     })
+  //     layers.forEach((url, i) => {
+  //       const img = new Image()
+  //       img.src = url
 
-        img.onload = () => {
-          layerData.current[i] = img
-          callback()
-        }
-      })
-    }
-  }, [sourceBitmapData])
+  //       img.onload = () => {
+  //         layerData.current[i] = img
+  //         callback()
+  //       }
+  //     })
+  //   }
+  // }, [sourceBitmapData])
 
-  // return (
-  //   <div>
-  //     <div ref={canvasHolder} />
-  //   </div>
-  // )
+  // if (!sourceBitmapData) return <div className="loading">LOADING!</div>
 
-  if (!sourceBitmapData) return <div className="loading">LOADING!</div>
-
-  // return <div ref={whatever} />
   return (
-    <Router history={history}>
-      <Switch>
-        <Route
-          path="/admin"
-          // path="/"
-          render={props => {
-            return <Builder sourceBitmapData={sourceBitmapData} dispatch={handleMouseEvent} forceUpdate={forceUpdate} />
-          }}
-        />
-        <Route path="" render={props => <Preview thumbs={assetData.current} layers={layerData.current} />} />
-      </Switch>
-    </Router>
+    // <Router history={history}>
+    //   <Switch>
+    //     <Route
+    //       path="/grid"
+    //       // path="/"
+    //       render={props => <Gridder />}
+    //     />
+    //     <Route
+    //       path="/admin"
+    //       // path="/"
+    //       render={props => {
+    //         return <Builder sourceBitmapData={sourceBitmapData} dispatch={handleMouseEvent} forceUpdate={forceUpdate} />
+    //       }}
+    //     />
+    //     <Route path="" render={props => <Preview thumbs={assetData.current} layers={layerData.current} />} />
+    //   </Switch>
+    // </Router>
+    <Comps />
   )
 }
