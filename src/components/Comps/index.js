@@ -6,9 +6,13 @@ import img1 from "../../assets/comps/version1.jpg"
 import img2 from "../../assets/comps/version2.jpg"
 import img3 from "../../assets/comps/version3.jpg"
 import img4 from "../../assets/comps/version4.jpg"
+import img5 from "../../assets/comps/version5.jpg"
+import img6 from "../../assets/comps/version6.jpg"
+import img7 from "../../assets/comps/version7.jpg"
+import img8 from "../../assets/comps/version8.jpg"
 
 const Comps = React.forwardRef((props, ref) => {
-  const images = [img1, img2, img3, img4]
+  const images = [img1, img2, img3, img4, img5, img6, img7, img8]
 
   const [compIndex, setCompIndex] = useState(0)
   const [hoverIndex, setHoverIndex] = useState(null)
@@ -23,7 +27,7 @@ const Comps = React.forwardRef((props, ref) => {
         <div className="preview-holder">
           <img alt="preview_1" src={images[compIndex]} />
           {hoverIndex !== null ? <img alt="preview_2" src={images[hoverIndex]} /> : null}
-          <p>{`Version ${getIndex()}${getIndex() === 1 ? " (original from comps)" : ""}`}</p>
+          <p>{`Version ${getIndex()}${getIndex() === 1 || getIndex() === 5 ? " (from PSD)" : ""}`}</p>
         </div>
       </div>
       <div className="comp-samples">

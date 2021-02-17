@@ -33,18 +33,20 @@
     }
   }
 
+  $size: calc(100vh / 10);
   .comp-samples {
-    // width: 100px;
+    width: calc(#{$size} * 4);
     height: 100vh;
     background-color: black;
     display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
     position: absolute;
     left: 0px;
-    flex-direction: column;
-    justify-content: space-between;
+
     img {
-      width: calc(100vh / 10);
-      height: calc(100vh / 10);
+      width: $size;
+      height: $size;
       opacity: 0.5;
       object-fit: contain;
 
