@@ -10,9 +10,9 @@ import { Actions } from "../../App"
 const Builder = React.forwardRef((props, ref) => {
   const { sourceBitmapData, dispatch } = props
 
-  const guideRight = require("../../assets/guides/guide_right_32x32.jpg").default
-  const guideLeft01 = require("../../assets/guides/guide_left_01_32x32.jpg").default
-  const guideLeft02 = require("../../assets/guides/guide_left_02_32x32.jpg").default
+  const guideRight = require("../../assets/guides/guide_right_32.jpg").default
+  const guideLeft01 = require("../../assets/guides/guide_left_01_32.jpg").default
+  const guideLeft02 = require("../../assets/guides/guide_left_02_32.jpg").default
 
   const images = useRef([guideRight, guideLeft01, guideLeft02]).current
   const bitmapData = useRef(new Array(images.length).fill(null)).current
@@ -27,6 +27,7 @@ const Builder = React.forwardRef((props, ref) => {
   const [iterations, setIterations] = useState(-1)
   const prevIteration = useRef(iterations)
   const [controlPoints, setControlPoints] = useState([])
+  const [hideControls, setHideControls] = useState(false)
 
   const gridItems = useRef([]).current
 
@@ -50,7 +51,7 @@ const Builder = React.forwardRef((props, ref) => {
           // })
           // }
 
-          setDummyIndex(2)
+          setDummyIndex(0)
         }
       }
 
@@ -151,7 +152,6 @@ const Builder = React.forwardRef((props, ref) => {
     dummy.meshCanvas.gridManager.positions.forEach(coord => {
       coord.isControl = false
     })
-    console.clear()
     if (dummy.meshCanvas.gridManager.positions.length === 4) {
       viewPoints = [0, 1, 2, 3]
     } else {
@@ -176,10 +176,10 @@ const Builder = React.forwardRef((props, ref) => {
   }, [props.forceUpdate])
 
   function getControls(type) {
-    // return null
+    if (hideControls) return null
     return (
       <div className="controls">
-        <div className="button-holder">
+        {/* <div className="button-holder">
           {CanvasDummyBuilder.meshables.map((ignore, index) => {
             return (
               <div
@@ -192,7 +192,7 @@ const Builder = React.forwardRef((props, ref) => {
               >{`Show Canvas ${index}`}</div>
             )
           })}
-        </div>
+        </div> */}
         <div className="button-holder">
           <div
             className="button"
@@ -213,7 +213,7 @@ const Builder = React.forwardRef((props, ref) => {
             <p>{`${!wireframeOpacity ? "Show" : "Hide"} Wireframe`}</p>
           </div>
         </div>
-        <div className="button-holder">
+        {/* <div className="button-holder">
           <div
             className="button"
             onClick={() => {
@@ -222,7 +222,7 @@ const Builder = React.forwardRef((props, ref) => {
           >
             <p>{`${!showDots ? "Show" : "Hide"} Dots`}</p>
           </div>
-        </div>
+        </div> */}
         <div className="button-holder">
           <div
             className="button"
@@ -277,6 +277,8 @@ const Builder = React.forwardRef((props, ref) => {
               -
             </div>
           </div>
+        </div>
+        <div className="button-holder">
           <div
             className="button"
             onClick={() => {
@@ -343,7 +345,7 @@ const Builder = React.forwardRef((props, ref) => {
               dispatch(event, Infinity, dummyIndex, dotsHolder.current)
             }}
             style={{
-              opacity: +showDots,
+              opacity: +(props.showDots === false ? false : showDots),
               width: dummy.meshCanvas.output.width,
               height: dummy.meshCanvas.output.height,
             }}
@@ -390,6 +392,14 @@ const Builder = React.forwardRef((props, ref) => {
         </div>
       </div>
       {getControls()}
+      <div
+        className="close-but"
+        onClick={() => {
+          setHideControls(!hideControls)
+        }}
+      >
+        X
+      </div>
     </div>
   )
 })

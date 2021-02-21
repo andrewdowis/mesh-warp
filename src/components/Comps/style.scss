@@ -33,9 +33,9 @@
     }
   }
 
-  $size: calc(100vh / 10);
+  $size: calc(100vh / 7);
   .comp-samples {
-    width: calc(#{$size} * 4);
+    width: calc(#{$size} * 3);
     height: 100vh;
     background-color: black;
     display: flex;

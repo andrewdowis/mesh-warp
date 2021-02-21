@@ -15,5 +15,6 @@ Feb 8 - Feb 12
 
 Feb 16 - ?
   Monday: 2
-  Tuesday: 930 - 12
-  Wednesday: 1,
+  Tuesday: 930 -> 12
+  Wednesday: 1, 40
+  Thursday: 9:30 -> 10:30

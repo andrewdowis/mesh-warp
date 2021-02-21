@@ -1,24 +1,37 @@
 .builder {
+  .close-but {
+    position: fixed;
+    right: 0px;
+    top: 0px;
+    padding: 10px;
+    cursor: pointer;
+
+    &:hover {
+      color: black;
+    }
+  }
   .controls {
-    background-color: red;
+    // background-color: red;
+    background-color: pink;
+
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
     width: 350px;
+    max-width: 30vw;
     height: 100vh;
     position: fixed;
     top: 0px;
     right: 0px;
 
     .button-holder {
-      background-color: pink;
-
       display: flex;
       flex-direction: row;
 
       div {
         background-color: purple;
         // width: 300px;
+        // max-width: 8vmax;
         margin: auto;
       }
 
@@ -26,7 +39,7 @@
         -moz-user-select: none;
         -webkit-user-select: none;
 
-        padding: 20px;
+        padding: 2vw;
 
         .iterate-button {
           width: 30px;
@@ -47,12 +60,21 @@
       }
 
       .button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         cursor: pointer;
         -moz-user-select: none;
         -webkit-user-select: none;
 
-        height: 6vh;
-        padding: 2vmax;
+        height: 100%;
+        padding: 2vh;
+
+        p {
+          margin: 0px;
+          padding: 0px;
+          white-space: nowrap;
+        }
 
         &:hover {
           color: black;
@@ -62,7 +84,7 @@
     }
   }
   .holder {
-    // margin-left: -400px;
+    margin-left: -150px;
     // display: flex;
     // align-items: center;
     // justify-content: center;
@@ -136,12 +158,28 @@
           }
 
           &:hover {
-            background-color: rgba(255, 255, 255, 0.5);
+            // background-color: rgba(255, 255, 255, 0.5);
             border: $border-size-hover solid limegreen;
             width: $dot-size-hover;
             height: $dot-size-hover;
             border-radius: $dot-size-hover;
             transform: translate($offset-hover, $offset-hover);
+
+            div {
+              background-color: red;
+            }
+
+            .cross-01 {
+              width: 1px;
+              height: 48%;
+              left: 50%;
+            }
+
+            .cross-02 {
+              width: 48%;
+              height: 1px;
+              top: 50%;
+            }
           }
         }
         .grid-dot-small {

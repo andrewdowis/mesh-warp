@@ -1,6 +1,4 @@
 import React, { useEffect, useRef, useState } from "react"
-import { traverseTwoPhase } from "react-dom/test-utils"
-import GridManager from "../../lib/GridManager"
 import CanvasDummyBuilder from "../../lib/CanvasDummyBuilder"
 
 import { CanvasColoring } from "@ff0000-ad-tech/ad-canvas"
@@ -72,12 +70,16 @@ const Preview = React.forwardRef((props, ref) => {
                 ctx.drawImage(img, 0, 0, width, height)
                 break
               case 4:
-                ctx.drawImage(CanvasDummyBuilder.meshables[0].meshCanvas.filler, 0, 0, width, height)
-                ctx.drawImage(CanvasDummyBuilder.meshables[0].meshCanvas.output, 0, 0, width, height)
+                for (let i = 1; i > -1; i--) {
+                  ctx.drawImage(CanvasDummyBuilder.meshables[0].meshCanvas.filler, i, i, width, height)
+                  ctx.drawImage(CanvasDummyBuilder.meshables[0].meshCanvas.output, i, i, width, height)
+                }
                 break
               case 5:
-                ctx.drawImage(CanvasDummyBuilder.meshables[2].meshCanvas.filler, 0, 0, width, height)
-                ctx.drawImage(CanvasDummyBuilder.meshables[2].meshCanvas.output, 0, 0, width, height)
+                for (let i = 1; i > -1; i--) {
+                  ctx.drawImage(CanvasDummyBuilder.meshables[2].meshCanvas.filler, i, i, width, height)
+                  ctx.drawImage(CanvasDummyBuilder.meshables[2].meshCanvas.output, i, i, width, height)
+                }
                 break
               default:
                 break

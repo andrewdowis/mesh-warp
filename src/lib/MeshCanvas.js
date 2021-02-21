@@ -36,8 +36,11 @@ export default class MeshCanvas {
     this.filler.width = width
     this.filler.height = height
 
-    this.wireframe.width = width
-    this.wireframe.height = height
+    const mult = 2
+    this.wireframe.width = width * mult
+    this.wireframe.height = height * mult
+    this.wireframe.style.width = `${width}px`
+    this.wireframe.style.height = `${height}px`
 
     this.src = image
 
@@ -52,7 +55,8 @@ export default class MeshCanvas {
 
     ctx_wireframe.clearRect(0, 0, this.wireframe.width, this.wireframe.height)
     ctx_wireframe.strokeStyle = "red"
-    ctx_wireframe.lineWidth = 1.5
+    ctx_wireframe.lineWidth = 2
+    const mult = 2
     for (let i = 0; i < this.gridManager.positions.length; i++) {
       const coord = this.gridManager.positions[i]
       let neighbor = this.gridManager.positions[i + 1]
@@ -60,12 +64,12 @@ export default class MeshCanvas {
       ctx_wireframe.beginPath()
       if (i >= this.gridManager.gCols) {
         const upper = this.gridManager.positions[i - this.gridManager.columns - 1]
-        ctx_wireframe.moveTo(upper.x, upper.y)
-        ctx_wireframe.lineTo(coord.x, coord.y)
+        ctx_wireframe.moveTo(upper.x * mult, upper.y * mult)
+        ctx_wireframe.lineTo(coord.x * mult, coord.y * mult)
       } else {
-        ctx_wireframe.moveTo(coord.x, coord.y)
+        ctx_wireframe.moveTo(coord.x * mult, coord.y * mult)
       }
-      if (neighbor) ctx_wireframe.lineTo(neighbor.x, neighbor.y)
+      if (neighbor) ctx_wireframe.lineTo(neighbor.x * mult, neighbor.y * mult)
       ctx_wireframe.stroke()
       ctx_wireframe.closePath()
     }
@@ -133,7 +137,7 @@ export default class MeshCanvas {
     canvi.forEach((canvas, c) => {
       let ctx = canvas.getContext("2d")
 
-      const offset = c * 4
+      const offset = c * 2
 
       ctx.clearRect(0, 0, w, h)
       // render the images
@@ -192,7 +196,7 @@ export default class MeshCanvas {
         // ctx.fillStyle = "rgba(0, 0, 0, 0.5)"
         // ctx.fillStyle = "blue"
         ctx.fill()
-        // ctx.clip/()
+        ctx.clip()
         ctx.drawImage(img, rootX, rootY, subwidth, subheight, 0, 0, subwidth, subheight)
         ctx.restore()
 

@@ -7,7 +7,7 @@ import "./style.scss"
 const Gridder = React.forwardRef((props, ref) => {
   const images = useRef([])
   const holder = useRef()
-  const amount = 32
+  const amount = 64
 
   const [bitmapData, setBitmapData] = useState(["294x971", "297x974", "287x940"])
   const [status, setStatus] = useState("canvas")
@@ -97,7 +97,7 @@ const Gridder = React.forwardRef((props, ref) => {
   }, [status])
 
   return (
-    <div>
+    <div className="gridder">
       {status !== "done" ? (
         <p>Loading.</p>
       ) : (

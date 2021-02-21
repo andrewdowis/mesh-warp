@@ -91,13 +91,6 @@ export default class GridManager {
             new_points.push(coord)
           }
         }
-        // new_points = this.positions.filter((coord, i) => {
-        //   if (i % this.gCols === 0) modulo = +!modulo
-        //   return i % 2 === modulo
-        // })
-
-        // console.log(this.positions)
-        // console.log(new_points)
 
         this.columns /= 2
         this.rows /= 2
