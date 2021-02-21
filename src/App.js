@@ -64,6 +64,8 @@ export default function App() {
     require("./assets/textures/asset_bp2.jpg").default,
     require("./assets/textures/asset_looney2.jpg").default,
     require("./assets/textures/asset_tmnt2.jpg").default,
+    // require("./assets/textures/grids_01.jpg").default,
+    // require("./assets/textures/grids_02.jpg").default,
   ]
   const assetData = useRef([])
   const [shiftState, setShiftState] = useState(false)
@@ -88,29 +90,31 @@ export default function App() {
 
   const gridTarget = useRef()
 
-  // function handleKeyEvents(event) {
-  //   if (event.keyCode === 16) {
-  //     let next
-  //     switch (event.type) {
-  //       case Actions.KEY_DOWN:
-  //         mouseDownPos.current = {
-  //           ...mouseCurPos.current,
-  //         }
-  //         next = true
-  //         break
-  //       case Actions.KEY_UP:
-  //         next = false
-  //         break
-  //       default:
-  //         break
-  //     }
-  //     if (next !== null) {
-  //       shiftDown.current = next
-  //       setShiftState(next)
-  //       event.target.style.cursor = next ? "none" : "default"
-  //     }
-  //   }
-  // }
+  function handleKeyEvents(event) {
+    if (event.keyCode === 16) {
+      let next
+      switch (event.type) {
+        // case Actions.KEY_DOWN:
+        //   mouseDownPos.current = {
+        //     ...mouseCurPos.current,
+        //   }
+        //   next = true
+        //   break
+        case Actions.KEY_UP:
+          shiftDown.current = !shiftDown.current
+          setShiftState(shiftDown.current)
+          // next = false
+          break
+        default:
+          break
+      }
+      // if (next !== null) {
+      //   shiftDown.current = next
+      //   setShiftState(next)
+      //   // event.target.style.cursor = next ? "none" : "default"
+      // }
+    }
+  }
 
   ////////////////////////////////////////////////////////////
 
@@ -167,12 +171,12 @@ export default function App() {
         // } else {
         if (dotIndexRef.current === Infinity) return
 
-        const sub = 5
-        // const sub = shiftDown.current ? 7 : 1
+        // const sub = 5
+        const sub = shiftState ? 7 : 1
         const { x: downX, y: downY } = mouseDownPos.current
         const { x: boundX, y: boundY } = boundingRect.current
 
-        const nextX = downX - boundX + (event.pageX - downX) / sub
+        const nextX = downX - boundX - document.documentElement.scrollLeft + (event.pageX - downX) / sub
         const nextY = downY - boundY - document.documentElement.scrollTop + (event.pageY - downY) / sub
         targetMeshable.updateDot(
           dotIndexRef.current,
@@ -198,7 +202,7 @@ export default function App() {
     if (!bodyRef) {
       const ref = document.getElementsByTagName("body")[0]
       // ref.addEventListener(Actions.KEY_DOWN, handleKeyEvents, false)
-      // ref.addEventListener(Actions.KEY_UP, handleKeyEvents, false)
+      ref.addEventListener(Actions.KEY_UP, handleKeyEvents, false)
       setBody(ref)
     }
   }, [bodyRef])
@@ -264,6 +268,7 @@ export default function App() {
                 dispatch={handleMouseEvent}
                 forceUpdate={forceUpdate}
                 showDots={!mouseDown}
+                color={shiftState}
               />
             )
           }}

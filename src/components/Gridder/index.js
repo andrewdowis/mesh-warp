@@ -7,9 +7,9 @@ import "./style.scss"
 const Gridder = React.forwardRef((props, ref) => {
   const images = useRef([])
   const holder = useRef()
-  const amount = 64
+  const amount = 32
 
-  const [bitmapData, setBitmapData] = useState(["294x971", "297x974", "287x940"])
+  const [bitmapData, setBitmapData] = useState(["294x971", "297x974", "287x940", "728x1188"])
   const [status, setStatus] = useState("canvas")
 
   useEffectOnce(() => {
@@ -28,17 +28,38 @@ const Gridder = React.forwardRef((props, ref) => {
       let x = 0
       let y = 0
 
-      c.beginPath()
-
-      c.lineWidth = 1
-      c.strokeStyle = "white"
-
       for (let i = 0; i < total; i++) {
+        c.beginPath()
+        c.lineWidth = 1
+        c.strokeStyle = "red"
         c.moveTo(x, y)
         c.lineTo(x + width, y)
+        c.stroke()
+        c.closePath()
+
+        c.beginPath()
+        c.lineWidth = 1
+        c.strokeStyle = "cyan"
+        c.moveTo(x + width, y)
         c.lineTo(x + width, y + height)
+        c.stroke()
+        c.closePath()
+
+        c.beginPath()
+        c.lineWidth = 1
+        c.strokeStyle = "red"
+        c.moveTo(x + width, y + height)
         c.lineTo(x, y + height)
-        c.lineTo(x, y)
+        c.stroke()
+        c.closePath()
+
+        c.beginPath()
+        c.lineWidth = 1
+        c.strokeStyle = "cyan"
+        c.moveTo(x, y + height)
+        c.lineTo(x, y + height)
+        c.stroke()
+        c.closePath()
 
         x += width
 
@@ -47,8 +68,6 @@ const Gridder = React.forwardRef((props, ref) => {
           y += height
         }
       }
-      c.stroke()
-      c.closePath()
 
       c.beginPath()
       c.moveTo(0, 0)

@@ -20,9 +20,9 @@ const Builder = React.forwardRef((props, ref) => {
   const [imageArray, setImageArray] = useState()
   const [dummyIndex, setDummyIndex] = useState()
   const [dummy, setDummy] = useState()
-  const [meshOpacity, setMeshOpacity] = useState(1)
+  const [meshOpacity, setMeshOpacity] = useState(0)
   const [transparency, setTransparency] = useState(false)
-  const [showDots, setShowDots] = useState(true)
+  const [showDots, setShowDots] = useState(false)
   const [wireframeOpacity, setWireframeOpacity] = useState(1)
   const [iterations, setIterations] = useState(-1)
   const prevIteration = useRef(iterations)
@@ -51,7 +51,7 @@ const Builder = React.forwardRef((props, ref) => {
           // })
           // }
 
-          setDummyIndex(0)
+          setDummyIndex(2)
         }
       }
 
@@ -174,6 +174,10 @@ const Builder = React.forwardRef((props, ref) => {
   useEffect(() => {
     if (dummy) updateControlPoints()
   }, [props.forceUpdate])
+
+  useEffect(() => {
+    if (dummy) dummy.meshCanvas.toggleColor(props.color)
+  }, [props.color])
 
   function getControls(type) {
     if (hideControls) return null

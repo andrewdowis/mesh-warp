@@ -1,8 +1,8 @@
 {
   "name": "mesh-warp-app",
   "author": "Andrew Dowis",
-  "homepage": "https://www.andrewdowis.com/dev/rock2d",
-  "version": "0.0.1",
+  "homepage": ".",
+  "version": "1.0.7",
   "repository": {
     "type": "git",
     "url": "git@github.com:adowis/mesh-warp.git"

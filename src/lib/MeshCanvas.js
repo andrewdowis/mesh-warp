@@ -46,6 +46,7 @@ export default class MeshCanvas {
 
     this.gridManager = gridManager
 
+    this.toggleColor()
     this.refresh()
   }
 
@@ -54,8 +55,8 @@ export default class MeshCanvas {
     let ctx_wireframe = this.wireframe.getContext("2d")
 
     ctx_wireframe.clearRect(0, 0, this.wireframe.width, this.wireframe.height)
-    ctx_wireframe.strokeStyle = "red"
-    ctx_wireframe.lineWidth = 2
+    ctx_wireframe.strokeStyle = this.color
+    ctx_wireframe.lineWidth = 1.5
     const mult = 2
     for (let i = 0; i < this.gridManager.positions.length; i++) {
       const coord = this.gridManager.positions[i]
@@ -135,16 +136,13 @@ export default class MeshCanvas {
     const skip_amount = rewind_amount * rows - 1
 
     canvi.forEach((canvas, c) => {
+      const offset = c // * 1
+
       let ctx = canvas.getContext("2d")
-
-      const offset = c * 2
-
       ctx.clearRect(0, 0, w, h)
-      // render the images
 
+      // render the images
       for (let i = target; i > -1; i -= rewind_amount) {
-        // console.log(c, i)
-        console.log()
         const c1 = gm.positions[i]
         const c2 = gm.positions[i + 1]
         const c3 = gm.positions[i + 1 + columns]
@@ -212,5 +210,10 @@ export default class MeshCanvas {
 
   updateQuantity(add_or_subtract) {
     this.gridManager.updateQuantity(add_or_subtract)
+  }
+
+  toggleColor(float = false) {
+    this.color = !float ? "cyan" : "red"
+    this.refresh()
   }
 }

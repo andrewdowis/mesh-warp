@@ -1,0 +1,42 @@
+{
+  "files": {
+    "main.css": "./static/css/main.a72a44af.chunk.css",
+    "main.js": "./static/js/main.f74b05c5.chunk.js",
+    "main.js.map": "./static/js/main.f74b05c5.chunk.js.map",
+    "runtime-main.js": "./static/js/runtime-main.cf77bfc6.js",
+    "runtime-main.js.map": "./static/js/runtime-main.cf77bfc6.js.map",
+    "static/js/2.995b77d6.chunk.js": "./static/js/2.995b77d6.chunk.js",
+    "static/js/2.995b77d6.chunk.js.map": "./static/js/2.995b77d6.chunk.js.map",
+    "static/js/3.f84de791.chunk.js": "./static/js/3.f84de791.chunk.js",
+    "static/js/3.f84de791.chunk.js.map": "./static/js/3.f84de791.chunk.js.map",
+    "index.html": "./index.html",
+    "static/css/main.a72a44af.chunk.css.map": "./static/css/main.a72a44af.chunk.css.map",
+    "static/js/2.995b77d6.chunk.js.LICENSE.txt": "./static/js/2.995b77d6.chunk.js.LICENSE.txt",
+    "static/media/asset_01.jpg": "./static/media/asset_01.dae64ad5.jpg",
+    "static/media/asset_02.jpg": "./static/media/asset_02.a1965573.jpg",
+    "static/media/asset_03.jpg": "./static/media/asset_03.885eb998.jpg",
+    "static/media/asset_04.jpg": "./static/media/asset_04.7b80fa12.jpg",
+    "static/media/asset_bp2.jpg": "./static/media/asset_bp2.31ab06fd.jpg",
+    "static/media/asset_looney2.jpg": "./static/media/asset_looney2.11c89469.jpg",
+    "static/media/asset_tmnt2.jpg": "./static/media/asset_tmnt2.c93b4bf5.jpg",
+    "static/media/guide_left_01_32.jpg": "./static/media/guide_left_01_32.9bf299c8.jpg",
+    "static/media/guide_left_02_32.jpg": "./static/media/guide_left_02_32.02ffd1cb.jpg",
+    "static/media/guide_right_32.jpg": "./static/media/guide_right_32.fb590799.jpg",
+    "static/media/layer_01.png": "./static/media/layer_01.0eaae9e9.png",
+    "static/media/layer_02_multiply.png": "./static/media/layer_02_multiply.f88cdf8f.png",
+    "static/media/layer_03_base.png": "./static/media/layer_03_base.caa520d5.png",
+    "static/media/layer_03_base_02.png": "./static/media/layer_03_base_02.46feb102.png",
+    "static/media/sock_mask_left.png": "./static/media/sock_mask_left.c26b88b5.png",
+    "static/media/sock_mask_right.png": "./static/media/sock_mask_right.3b119e55.png",
+    "static/media/version06.f52aac51.jpg": "./static/media/version06.f52aac51.jpg",
+    "static/media/version08.31dacfa6.jpg": "./static/media/version08.31dacfa6.jpg",
+    "static/media/version09.5f8a70c4.jpg": "./static/media/version09.5f8a70c4.jpg",
+    "static/media/version10.2d8e46da.jpg": "./static/media/version10.2d8e46da.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.cf77bfc6.js",
+    "static/js/2.995b77d6.chunk.js",
+    "static/css/main.a72a44af.chunk.css",
+    "static/js/main.f74b05c5.chunk.js"
+  ]
+}

@@ -84,7 +84,8 @@
     }
   }
   .holder {
-    margin-left: -150px;
+    // margin-left: -150px;
+    margin-left: -450px;
     // display: flex;
     // align-items: center;
     // justify-content: center;
@@ -159,11 +160,11 @@
 
           &:hover {
             // background-color: rgba(255, 255, 255, 0.5);
-            border: $border-size-hover solid limegreen;
-            width: $dot-size-hover;
-            height: $dot-size-hover;
-            border-radius: $dot-size-hover;
-            transform: translate($offset-hover, $offset-hover);
+            border: $border-size solid limegreen;
+            // width: $dot-size-hover;
+            // height: $dot-size-hover;
+            // border-radius: $dot-size-hover;
+            // transform: translate($offset-hover, $offset-hover);
 
             div {
               background-color: red;
