@@ -1,0 +1,68 @@
+.comp-container {
+  display: flex;
+  justify-content: center;
+  .comp-preview {
+    background-color: white;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+
+    img {
+      max-height: 90vh;
+    }
+  }
+
+  .preview-holder {
+    width: 100vw;
+    height: 100vh;
+    background-color: gray;
+    img {
+      position: absolute;
+      top: 0px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    p {
+      color: black;
+      position: absolute;
+      top: -5px;
+      font-size: 1.5em;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  $size: calc(100vh / 7);
+  .comp-samples {
+    width: calc(#{$size} * 3);
+    height: 100vh;
+    background-color: black;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    position: absolute;
+    left: 0px;
+
+    img {
+      width: $size;
+      height: $size;
+      opacity: 0.5;
+      object-fit: contain;
+
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+
+    .comp-selected {
+      opacity: 1;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}
