@@ -32,6 +32,7 @@ import Builder from "./components/Builder"
 import Preview from "./components/Preview"
 import Gridder from "./components/Gridder"
 import Comps from "./components/Comps"
+import Uploader from "./components/Uploader"
 
 import CanvasDummyBuilder from "./lib/CanvasDummyBuilder"
 
@@ -248,19 +249,10 @@ export default function App() {
   return (
     <Router history={history}>
       <Switch>
-        <Route
-          path="/comps"
-          // path="/"
-          render={props => <Comps />}
-        />
-        <Route
-          path="/grid"
-          // path="/"
-          render={props => <Gridder />}
-        />
+        {/* <Route path="/comps" render={props => <Comps />} />
+        <Route path="/grid" render={props => <Gridder />} />
         <Route
           path="/admin"
-          // path="/"
           render={props => {
             return (
               <Builder
@@ -273,7 +265,8 @@ export default function App() {
             )
           }}
         />
-        <Route path="" render={props => <Preview thumbs={assetData.current} layers={layerData.current} />} />
+        <Route path="" render={props => <Preview thumbs={assetData.current} layers={layerData.current} />} /> */}
+        <Route path="" render={props => <Uploader />} />
       </Switch>
     </Router>
   )
