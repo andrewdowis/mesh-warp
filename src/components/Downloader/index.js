@@ -3,7 +3,10 @@ import CanvasDummyBuilder from "../../lib/CanvasDummyBuilder"
 
 import { CanvasColoring } from "@ff0000-ad-tech/ad-canvas"
 
+import { ThemeProvider, Button, makeStyles, createMuiTheme } from "@material-ui/core"
+
 import "./style.scss"
+import { Title } from "@material-ui/icons"
 
 const Status = {
   NONE: null,
@@ -14,27 +17,49 @@ const Status = {
   CONTRAST: "Adding Contrast...",
 }
 
-const Preview = React.forwardRef((props, ref) => {
-  const { thumbs, layers } = props
+const theme = createMuiTheme({
+  props: {
+    // Name of the component ⚛️
+    // MuiButtonBase: {
+    //   // The properties to apply
+    //   disableRipple: true, // No more ripple, on the whole application 💣!
+    // },
+  },
+  palette: {
+    primary: { main: "#000000" },
+  },
+})
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    "& > *": {
+      padding: "5px 50px",
+      // margin: theme.spacing(1),
+    },
+    // "&:hover": {
+    //   backgroundColor: "#000000",
+    // },
+  },
+  input: {
+    display: "none",
+  },
+}))
+
+const Downloader = React.forwardRef((props, ref) => {
+  const classes = useStyles()
+  const { layers, texture, title } = props
+  const filename = `${title} Product Photo - Separated Style.png`
   const canvasRef = useRef()
 
-  const [selected, setSelected] = useState(0)
-
-  const [status, setStatus] = useState(Status.LOADING)
+  const [status, setStatus] = useState(Status.TEXTURE)
 
   const update_status = async () => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve()
-      }, 500)
+      }, 750)
     })
   }
-
-  useEffect(async () => {
-    if (selected >= 0) {
-      setStatus(Status.TEXTURE)
-    }
-  }, [selected])
 
   useEffect(async () => {
     if (status !== undefined) {
@@ -44,7 +69,7 @@ const Preview = React.forwardRef((props, ref) => {
       let next_status
       switch (status) {
         case Status.TEXTURE:
-          CanvasDummyBuilder.refresh(thumbs[selected])
+          CanvasDummyBuilder.refresh(texture)
           const canvas = canvasRef.current
           const ctx = canvas.getContext("2d")
 
@@ -71,8 +96,8 @@ const Preview = React.forwardRef((props, ref) => {
                 break
               case 4:
                 for (let i = 1; i > -1; i--) {
-                  // ctx.drawImage(CanvasDummyBuilder.meshables[0].meshCanvas.filler, i, i, width, height)
-                  // ctx.drawImage(CanvasDummyBuilder.meshables[0].meshCanvas.output, i, i, width, height)
+                  ctx.drawImage(CanvasDummyBuilder.meshables[0].meshCanvas.filler, i, i, width, height)
+                  ctx.drawImage(CanvasDummyBuilder.meshables[0].meshCanvas.output, i, i, width, height)
                 }
                 break
               case 5:
@@ -115,6 +140,8 @@ const Preview = React.forwardRef((props, ref) => {
             amount: 1.035,
           })
           break
+        case Status.NONE:
+          break
         default:
           // Loading
           break
@@ -123,31 +150,75 @@ const Preview = React.forwardRef((props, ref) => {
     }
   }, [status])
 
+  const downloadBitmap = () => {
+    const canvas = document.createElement("canvas")
+    canvas.width = canvasRef.current.width
+    canvas.height = canvasRef.current.height
+    const ctx = canvas.getContext("2d")
+
+    ctx.beginPath()
+    ctx.rect(0, 0, canvas.width, canvas.height)
+    ctx.fillStyle = "#ffffff"
+    ctx.fill()
+
+    ctx.drawImage(canvasRef.current, 0, 0)
+
+    const bitmapData = canvas.toDataURL("image/jpg")
+
+    const image = new Image()
+
+    image.src = bitmapData
+
+    image.onload = () => {
+      fetch(image.src, {
+        method: "GET",
+        headers: {},
+      })
+        .then(response => {
+          response.arrayBuffer().then(function(buffer) {
+            const link = document.createElement("a")
+            link.href = window.URL.createObjectURL(new Blob([buffer]))
+            link.download = filename
+
+            document.body.appendChild(link)
+            link.click()
+
+            setTimeout(function() {
+              window.URL.revokeObjectURL(link)
+              document.body.removeChild(link)
+            }, 200)
+          })
+        })
+        .catch(err => {})
+    }
+  }
+
   return (
-    <div className="container">
-      <div className="preview">
-        <div className="samples">
-          {thumbs.map((img, i) => {
-            return (
-              <img
-                className={i === selected ? "selected" : ""}
-                src={img.src}
-                key={`${img.src}_${i}`}
-                alt={`thumbnail${i}`}
-                onClick={() => {
-                  setSelected(i)
-                }}
-              />
-            )
-          })}
-        </div>
-        <div className="preview-content">
-          <canvas ref={canvasRef} width={1000} height={1000} />
+    <ThemeProvider theme={theme}>
+      <div className="downloader">
+        <div className="image-preview">
+          <canvas className={status ? "blur" : ""} ref={canvasRef} width={588} height={588} />
           {status && <div className="status">{status}</div>}
         </div>
+        <div className="download-panel">
+          <div className="title-container">
+            <p>PRODUCT PREVIEW</p>
+            <p className="art-title">{title}</p>
+          </div>
+          <Button
+            style={{ borderRadius: "28px" }}
+            className={classes.root}
+            disableElevation
+            variant="contained"
+            color="primary"
+            onClick={downloadBitmap}
+          >
+            Download Hero Image
+          </Button>
+        </div>
       </div>
-    </div>
+    </ThemeProvider>
   )
 })
 
-export default Preview
+export default Downloader

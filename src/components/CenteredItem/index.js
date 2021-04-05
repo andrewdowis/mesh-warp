@@ -4,8 +4,8 @@ import useEffectOnce from "../../hooks/useEffectOnce"
 
 import "./style.scss"
 
-const CenteredItem = React.forwardRef(({ children }) => {
-  return <div className="centered-item">{children}</div>
+const CenteredItem = React.forwardRef(({ children, className }) => {
+  return <div className={`centered-item${className ? ` ${className}` : ""}`}>{children}</div>
 })
 
 export default CenteredItem
