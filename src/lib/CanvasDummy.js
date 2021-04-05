@@ -9,6 +9,9 @@ export default class CanvasDummy {
 
     this.id = id
 
+    const image_scale = 720 / src.width
+    console.log(`%c SCALE IS:`, "color: black; background-color: lime; font-style: italic; padding: 2px;")
+    console.log(image_scale, 720, 1188, "||", 3000, 4950, src.width, src.height)
     this.values = [src, x || 0, y || 0, image_width || src.width, image_height || src.height]
     this.parent = src
 

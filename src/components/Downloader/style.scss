@@ -41,10 +41,12 @@ $white: #ffffff;
   display: flex;
   flex-direction: row;
   align-items: center;
+  width: fit-content;
 
   .image-preview {
     width: 588px;
     height: 588px;
+    background-color: blue;
     overflow: hidden;
     position: relative;
     margin-right: 64px;

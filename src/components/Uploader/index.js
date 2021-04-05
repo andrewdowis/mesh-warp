@@ -1,12 +1,8 @@
-import React, { useEffect, useRef, useState } from "react"
-import { traverseTwoPhase } from "react-dom/test-utils"
-import useEffectOnce from "../../hooks/useEffectOnce"
+import React, { useState } from "react"
 
-import { ThemeProvider, Button, makeStyles, createMuiTheme } from "@material-ui/core"
+import { ThemeProvider, makeStyles, createMuiTheme } from "@material-ui/core"
 import Downloader from "../Downloader"
-import CenteredItem from "../CenteredItem"
-
-import uploadIcon from "../../assets/images/upload-icon.svg"
+import UploadPanel from "../UploadPanel"
 
 import "./style.scss"
 
@@ -45,11 +41,7 @@ const Uploader = React.forwardRef((props, ref) => {
   const [title, setTitle] = useState(text_default)
   const [isTitleValid, setIsTitleValid] = useState(true)
   // const [isTitleValid, setIsTitleValid] = useState(title !== text_default)
-  const [uploadSource, setUploadSource] = useState()
-  const [uploadFormat, setUploadFormat] = useState()
   const [uploadedImage, setUploadedImage] = useState()
-  const [imageError, setImageError] = useState()
-  const [thing, setThing] = useState(false)
 
   const updateTitle = new_title => {
     setTitle(new_title)
@@ -75,70 +67,8 @@ const Uploader = React.forwardRef((props, ref) => {
     if (e.key.toLowerCase() === "enter" || e.keyCode === 13) e.target.blur()
   }
 
-  const handleButtonClick = e => {
-    // Math.floor(1000 * (image.width / image.height)) !== Math.floor(1000 * (720/1188)) ||
-    if (uploadedImage.width !== 720 && uploadedImage.height !== 1188) {
-      setImageError("Image must be of dimensions 720x1188")
-      return
-    }
-    setThing(true)
-  }
-
-  const handleSubmitUpload = e => {
-    setImageError(null)
-    const image = new Image()
-
-    if (uploadedImage) window.URL.revokeObjectURL(uploadedImage)
-
-    image.src = window.URL.createObjectURL(uploadSource)
-
-    image.onload = () => {
-      setUploadedImage(image)
-      // setUploadSource(null)
-      window.URL.revokeObjectURL(uploadSource)
-    }
-  }
-
-  const handleUpload = e => {
-    const file = e.target.files[0]
-    if (!file) return
-    if (!file.name.match(/\.(jpg|jpeg|png|gif)$/i)) {
-      // this.setState({ errors: { fileUpload: "Must upload an image" } })
-      return
-    }
-
-    setUploadFormat(file.name.split(".")[1])
-
-    setUploadSource(file)
-  }
-
-  const downloadArt = () => {
-    const image = new Image()
-
-    image.src = window.URL.createObjectURL(uploadSource)
-
-    image.onload = () => {
-      fetch(image.src, {
-        method: "GET",
-        headers: {},
-      })
-        .then(response => {
-          response.arrayBuffer().then(function(buffer) {
-            const link = document.createElement("a")
-            link.href = window.URL.createObjectURL(new Blob([buffer]))
-            link.download = uploadSource.name
-
-            document.body.appendChild(link)
-            link.click()
-
-            setTimeout(function() {
-              window.URL.revokeObjectURL(link)
-              document.body.removeChild(link)
-            }, 200)
-          })
-        })
-        .catch(err => {})
-    }
+  const uploadedCallback = img => {
+    setUploadedImage(img)
   }
 
   const debug = () => {
@@ -146,12 +76,11 @@ const Uploader = React.forwardRef((props, ref) => {
   }
 
   return (
-    <>
-      {thing ? (
-        <Downloader texture={uploadedImage} title={title} layers={props.layers} />
-      ) : (
-        <ThemeProvider theme={theme}>
-          <div className="uploader">
+    <div className="mocker">
+      <Downloader texture={uploadedImage} title={title} layers={props.layers} />
+      <ThemeProvider theme={theme}>
+        <div className="uploader">
+          <div className="row">
             <div
               className="header"
               style={{
@@ -172,79 +101,14 @@ const Uploader = React.forwardRef((props, ref) => {
                 />
               </label>
             </div>
-            <p>Front Art</p>
-            <div className="upload-panel">
-              {!!uploadedImage && (
-                <div className="upload-result flex-column">
-                  <div
-                    className="img-holder"
-                    style={{
-                      backgroundImage: `url(${uploadedImage.src})`,
-                    }}
-                  />
-                  {/* {debug()} */}
-                  <CenteredItem>
-                    <Button
-                      className={classes.root}
-                      disableElevation
-                      variant="contained"
-                      color="primary"
-                      disabled={!isTitleValid}
-                      onClick={handleButtonClick}
-                    >
-                      Generate Preview
-                    </Button>
-                    {imageError && <p className="error">{imageError}</p>}
-                  </CenteredItem>
-                </div>
-              )}
-              <div className="upload-source flex-column">
-                <div className="upload flex-column">
-                  <input
-                    accept="image/*"
-                    className={classes.input}
-                    id="contained-button-file"
-                    multiple
-                    type="file"
-                    onChange={handleUpload}
-                  />
-                  <label htmlFor="contained-button-file">
-                    <div className="file-dropbox">
-                      <img alt="upload-icon" src={uploadIcon} />
-                    </div>
-                  </label>
-                  <Button
-                    className={classes.root}
-                    disableElevation
-                    variant="contained"
-                    color="secondary"
-                    disabled={!!!uploadSource}
-                    onClick={handleSubmitUpload}
-                  >
-                    Upload Front
-                  </Button>
-                </div>
-                <CenteredItem>
-                  <p
-                    style={
-                      !!!uploadSource
-                        ? {
-                            pointerEvents: "none",
-                            opacity: 0.5,
-                          }
-                        : {}
-                    }
-                    onClick={!!uploadSource ? downloadArt : null}
-                  >
-                    Download Front Art
-                  </p>
-                </CenteredItem>
-              </div>
-            </div>
           </div>
-        </ThemeProvider>
-      )}
-    </>
+          <div className="row">
+            <UploadPanel label="Front Art" {...{ classes, uploadedImage, uploadedCallback }} />
+            <UploadPanel label="Back Art" {...{ classes, uploadedImage, uploadedCallback }} />
+          </div>
+        </div>
+      </ThemeProvider>
+    </div>
   )
 })
 

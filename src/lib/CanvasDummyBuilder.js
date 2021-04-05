@@ -64,9 +64,6 @@ class CanvasDummyBuilder {
     this.dummies = canvas_data.map((obj, i) => {
       const dummy = new CanvasDummy()
       obj.image = obj.image || {}
-      if (obj.image.src) {
-      } else {
-      }
 
       const addMesh = obj.image.src || false
       obj.image.src = addMesh ? prev : src

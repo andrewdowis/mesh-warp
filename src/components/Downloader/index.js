@@ -62,7 +62,7 @@ const Downloader = React.forwardRef((props, ref) => {
   }
 
   useEffect(async () => {
-    if (status !== undefined) {
+    if (texture && status !== undefined) {
       let status_promise = update_status()
       await status_promise
 
