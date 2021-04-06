@@ -61,12 +61,13 @@ class CanvasDummyBuilder {
     let prev
     this.meshables = []
 
+    this.scaled_canvas = this.scaleDownTexture(src)
     this.dummies = canvas_data.map((obj, i) => {
       const dummy = new CanvasDummy()
       obj.image = obj.image || {}
 
       const addMesh = obj.image.src || false
-      obj.image.src = addMesh ? prev : src
+      obj.image.src = addMesh ? prev : this.scaled_canvas
 
       if (addMesh) obj.mesh = addMesh
 
@@ -80,8 +81,31 @@ class CanvasDummyBuilder {
 
       return dummy
     })
-
+    this.scaled_canvas = null
     // throw new Error("STOP")
+  }
+
+  scaleDownTexture(img) {
+    const canvas = this.scaled_canvas || document.createElement("canvas")
+    const ctx = canvas.getContext("2d")
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+    canvas.width = 720
+    canvas.height = 1188
+
+    ctx.beginPath()
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+    if (img.width > 720) {
+      const scale = 72 / 300
+      const scaled_width = img.width * scale
+      const scaled_height = img.height * scale
+      ctx.drawImage(img, (720 - scaled_width) / 2, 18, scaled_width, scaled_height)
+      // ctx.drawImage(src, 400, 18, scaled_width, scaled_height)
+    } else {
+      ctx.drawImage(img, 0, 0)
+    }
+
+    return canvas
   }
 
   refresh(img) {
@@ -90,13 +114,14 @@ class CanvasDummyBuilder {
     })
 
     non_meshy.forEach((dummy, i) => {
-      dummy.values[0] = img
+      dummy.values[0] = this.scaleDownTexture(img)
       dummy.refresh(true)
     })
 
     this.meshables.forEach((dummy, i) => {
       dummy.refresh(true)
     })
+    this.scaled_canvas = null
   }
 }
 

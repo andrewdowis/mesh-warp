@@ -71,8 +71,8 @@ const Preview = React.forwardRef((props, ref) => {
                 break
               case 4:
                 for (let i = 1; i > -1; i--) {
-                  // ctx.drawImage(CanvasDummyBuilder.meshables[0].meshCanvas.filler, i, i, width, height)
-                  // ctx.drawImage(CanvasDummyBuilder.meshables[0].meshCanvas.output, i, i, width, height)
+                  ctx.drawImage(CanvasDummyBuilder.meshables[0].meshCanvas.filler, i, i, width, height)
+                  ctx.drawImage(CanvasDummyBuilder.meshables[0].meshCanvas.output, i, i, width, height)
                 }
                 break
               case 5:

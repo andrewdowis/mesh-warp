@@ -57,13 +57,15 @@ export default function App() {
   const [forceUpdate, setForceUpdate] = useState()
 
   const assets = [
-    require("./assets/textures/asset_blank.jpg").default,
+    // require("./assets/textures/asset_blank.jpg").default,
+    // require("./assets/textures/asset_bp2.jpg").default,
+    require("./assets/textures/lxl_bp.png").default,
+    require("./assets/textures/lxl_wildcats.png").default,
     // require("./assets/textures/asset_01a.jpg").default,
     // require("./assets/textures/asset_01.jpg").default,
     // require("./assets/textures/asset_02.jpg").default,
     // require("./assets/textures/asset_03.jpg").default,
     // require("./assets/textures/asset_04.jpg").default,
-    // require("./assets/textures/asset_bp2.jpg").default,
     // require("./assets/textures/asset_looney2.jpg").default,
     // require("./assets/textures/asset_tmnt2.jpg").default,
     // require("./assets/textures/grids_01.jpg").default,
@@ -173,7 +175,6 @@ export default function App() {
         // } else {
         if (dotIndexRef.current === Infinity) return
 
-        // const sub = 5
         const sub = shiftState ? 7 : 1
         const { x: downX, y: downY } = mouseDownPos.current
         const { x: boundX, y: boundY } = boundingRect.current
@@ -248,28 +249,27 @@ export default function App() {
   if (!sourceBitmapData) return <div className="loading">LOADING!</div>
 
   return (
-    <Uploader layers={layerData.current} />
-    // <Router history={history}>
-    //   <Switch>
-    //     <Route path="/comps" render={props => <Comps />} />
-    //     <Route path="/grid" render={props => <Gridder />} />
-    //     <Route
-    //       path="/admin"
-    //       render={props => {
-    //         return (
-    //           <Builder
-    //             sourceBitmapData={sourceBitmapData}
-    //             dispatch={handleMouseEvent}
-    //             forceUpdate={forceUpdate}
-    //             showDots={!mouseDown}
-    //             color={shiftState}
-    //           />
-    //         )
-    //       }}
-    //     />
-    //     <Route path="" render={props => <Preview thumbs={assetData.current} layers={layerData.current} />} />
-    //     <Route path="" render={props => <Uploader layers={layerData.current} />} />
-    //   </Switch>
-    // </Router>
+    // <Uploader layers={layerData.current} />
+    <Router history={history}>
+      <Switch>
+        <Route path="/comps" render={props => <Comps />} />
+        <Route path="/grid" render={props => <Gridder />} />
+        <Route
+          path="/admin"
+          render={props => {
+            return (
+              <Builder
+                sourceBitmapData={sourceBitmapData}
+                dispatch={handleMouseEvent}
+                forceUpdate={forceUpdate}
+                showDots={!mouseDown}
+                color={shiftState}
+              />
+            )
+          }}
+        />
+        <Route path="" render={props => <Preview thumbs={assetData.current} layers={layerData.current} />} />
+      </Switch>
+    </Router>
   )
 }
