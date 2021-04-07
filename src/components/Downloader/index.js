@@ -8,6 +8,8 @@ import { ThemeProvider, Button, makeStyles, createMuiTheme } from "@material-ui/
 import "./style.scss"
 import { Title } from "@material-ui/icons"
 
+import blank from "../../assets/images/blank.png"
+
 const Status = {
   NONE: null,
   LOADING: "Loading...",
@@ -17,23 +19,11 @@ const Status = {
   CONTRAST: "Adding Contrast...",
 }
 
-const theme = createMuiTheme({
-  props: {
-    // Name of the component ⚛️
-    // MuiButtonBase: {
-    //   // The properties to apply
-    //   disableRipple: true, // No more ripple, on the whole application 💣!
-    // },
-  },
-  palette: {
-    primary: { main: "#000000" },
-  },
-})
-
 const useStyles = makeStyles(theme => ({
   root: {
     "& > *": {
-      padding: "5px 50px",
+      padding: "5px 150px",
+      textTransform: "capitalize",
       // margin: theme.spacing(1),
     },
     // "&:hover": {
@@ -52,6 +42,7 @@ const Downloader = React.forwardRef((props, ref) => {
   const canvasRef = useRef()
 
   const [status, setStatus] = useState(Status.TEXTURE)
+  const [textureCount, setTextureCount] = useState(0)
 
   const update_status = async () => {
     return new Promise((resolve, reject) => {
@@ -69,6 +60,8 @@ const Downloader = React.forwardRef((props, ref) => {
       let next_status
       switch (status) {
         case Status.TEXTURE:
+          if (!textureCount) setTextureCount(textureCount + 1)
+
           CanvasDummyBuilder.refresh(texture)
           const canvas = canvasRef.current
           const ctx = canvas.getContext("2d")
@@ -109,6 +102,7 @@ const Downloader = React.forwardRef((props, ref) => {
               default:
                 break
             }
+
             ctx.globalCompositeOperation = "source-over"
           }
           next_status = Status.TINTING
@@ -148,7 +142,15 @@ const Downloader = React.forwardRef((props, ref) => {
       }
       if (next_status !== undefined) setStatus(next_status)
     }
-  }, [status])
+  }, [status, texture])
+
+  useEffect(() => {
+    setStatus(Status.TEXTURE)
+  }, [texture])
+
+  // useEffect(() => {
+
+  // })
 
   const downloadBitmap = () => {
     const canvas = document.createElement("canvas")
@@ -193,31 +195,37 @@ const Downloader = React.forwardRef((props, ref) => {
     }
   }
 
+  const debug = () => {}
+
   return (
-    <ThemeProvider theme={theme}>
-      <div className="downloader">
-        <div className="image-preview">
-          <canvas className={status ? "blur" : ""} ref={canvasRef} width={588} height={588} />
-          {status && <div className="status">{status}</div>}
-        </div>
-        <div className="download-panel">
-          <div className="title-container">
-            <p>PRODUCT PREVIEW</p>
-            <p className="art-title">{title}</p>
-          </div>
-          <Button
-            style={{ borderRadius: "28px" }}
-            className={classes.root}
-            disableElevation
-            variant="contained"
-            color="primary"
-            onClick={downloadBitmap}
-          >
-            Download Hero Image
-          </Button>
-        </div>
+    <div className="downloader">
+      {debug()}
+      <div className="image-preview">
+        {texture && (
+          <>
+            <canvas className={status ? "blur" : ""} ref={canvasRef} width={588} height={588} />
+            {status && <div className="status">{status}</div>}
+          </>
+        )}
+        {!textureCount && <img src={blank} alt="rock-em-socks" />}
       </div>
-    </ThemeProvider>
+      <div className="download-panel">
+        <div className="title-container">
+          <p>PRODUCT PREVIEW</p>
+          <p className="art-title">{title}</p>
+        </div>
+        <Button
+          style={{ borderRadius: "28px", backgroundColor: "#000000", color: "#D8D8D8" }}
+          className={classes.root}
+          disableElevation
+          variant="contained"
+          color="default"
+          onClick={downloadBitmap}
+        >
+          Download Hero Image
+        </Button>
+      </div>
+    </div>
   )
 })
 

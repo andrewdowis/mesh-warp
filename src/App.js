@@ -36,6 +36,8 @@ import Uploader from "./components/Uploader"
 
 import CanvasDummyBuilder from "./lib/CanvasDummyBuilder"
 
+import rockEmLogo from "./assets/images/rock-em-logo.svg"
+
 import "./App.scss"
 
 export const Actions = {
@@ -57,10 +59,10 @@ export default function App() {
   const [forceUpdate, setForceUpdate] = useState()
 
   const assets = [
-    // require("./assets/textures/asset_blank.jpg").default,
+    require("./assets/textures/asset_blank.jpg").default,
     // require("./assets/textures/asset_bp2.jpg").default,
-    require("./assets/textures/lxl_bp.png").default,
-    require("./assets/textures/lxl_wildcats.png").default,
+    // require("./assets/textures/lxl_bp.png").default,
+    // require("./assets/textures/lxl_wildcats.png").default,
     // require("./assets/textures/asset_01a.jpg").default,
     // require("./assets/textures/asset_01.jpg").default,
     // require("./assets/textures/asset_02.jpg").default,
@@ -89,8 +91,6 @@ export default function App() {
   // const whatever = useRef()
 
   const [sourceBitmapData, setSourceBitmapData] = useState()
-
-  const canvasHolder = useRef()
 
   const gridTarget = useRef()
 
@@ -249,27 +249,12 @@ export default function App() {
   if (!sourceBitmapData) return <div className="loading">LOADING!</div>
 
   return (
-    // <Uploader layers={layerData.current} />
-    <Router history={history}>
-      <Switch>
-        <Route path="/comps" render={props => <Comps />} />
-        <Route path="/grid" render={props => <Gridder />} />
-        <Route
-          path="/admin"
-          render={props => {
-            return (
-              <Builder
-                sourceBitmapData={sourceBitmapData}
-                dispatch={handleMouseEvent}
-                forceUpdate={forceUpdate}
-                showDots={!mouseDown}
-                color={shiftState}
-              />
-            )
-          }}
-        />
-        <Route path="" render={props => <Preview thumbs={assetData.current} layers={layerData.current} />} />
-      </Switch>
-    </Router>
+    <>
+      <div className="section-header">
+        <img src={rockEmLogo} alt="rock-em-logo" />
+        <p>3D Mocker</p>
+      </div>
+      <Uploader layers={layerData.current} />
+    </>
   )
 }
