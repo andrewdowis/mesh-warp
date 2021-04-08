@@ -8,7 +8,7 @@ import "./style.scss"
 const Uploader = React.forwardRef((props, ref) => {
   const text_default = "Enter Title Here"
   const [title, setTitle] = useState(text_default)
-  const [outputTitle, setOutputTitle] = useState(title)
+  const [outputTitle, setOutputTitle] = useState("Enter Title Below")
   const [uploadedImage, setUploadedImage] = useState()
 
   const updateTitle = new_title => {

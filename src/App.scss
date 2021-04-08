@@ -39,7 +39,7 @@ body {
 
 .section-header {
   width: calc(100vw - 128px);
-  font-family: Helvetica;
+  font-family: $font-family;
   font-size: 48px;
   color: #000000;
   letter-spacing: 0;

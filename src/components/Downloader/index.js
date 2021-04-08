@@ -3,10 +3,9 @@ import CanvasDummyBuilder from "../../lib/CanvasDummyBuilder"
 
 import { CanvasColoring } from "@ff0000-ad-tech/ad-canvas"
 
-import { ThemeProvider, Button, makeStyles, createMuiTheme } from "@material-ui/core"
+import { Button, makeStyles } from "@material-ui/core"
 
 import "./style.scss"
-import { Title } from "@material-ui/icons"
 
 import blank from "../../assets/images/blank.png"
 
@@ -215,11 +214,16 @@ const Downloader = React.forwardRef((props, ref) => {
           <p className="art-title">{title}</p>
         </div>
         <Button
-          style={{ borderRadius: "28px", backgroundColor: "#000000", color: "#D8D8D8" }}
+          style={{
+            borderRadius: "28px",
+            backgroundColor: texture && status === Status.NONE ? "#000000" : "",
+            color: texture && status === Status.NONE ? "#D8D8D8" : "",
+          }}
           className={classes.root}
           disableElevation
           variant="contained"
           color="default"
+          disabled={!(texture && status === Status.NONE)}
           onClick={downloadBitmap}
         >
           Download Hero Image
