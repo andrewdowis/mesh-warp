@@ -1,24 +1,3 @@
-import { MathUtils } from "@ff0000-ad-tech/ad-utils"
-import { getAnglePoint } from "@ff0000-ad-tech/ad-utils/lib/MathUtils"
-
-const getAverage = (...numbers) => {
-  let number = 0
-  numbers.forEach(num => (number += num))
-  return number / numbers.length
-}
-
-const averagePoints = (...points) => {
-  let newPoint = { x: 0, y: 0 }
-  points.forEach(point => {
-    newPoint.x += point.x
-    newPoint.y += point.y
-  })
-  return {
-    x: newPoint.x / points.length,
-    y: newPoint.y / points.length,
-  }
-}
-
 export default class MeshCanvas {
   init(width, height, image, gridManager) {
     this.output = document.createElement("canvas")

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import CanvasDummyBuilder from "../../lib/CanvasDummyBuilder"
 
-import { CanvasColoring } from "@ff0000-ad-tech/ad-canvas"
+import * as CanvasColoring from "../../lib/red/CanvasColoring"
 
 import { Button, makeStyles } from "@material-ui/core"
 
