@@ -30,3 +30,4 @@ Sat April 3 - 6
   Monday: 1
   Tuesday: 3.5
   Wedneday: 3
+  Thursday: 0.5

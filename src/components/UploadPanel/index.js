@@ -143,7 +143,7 @@ const UploadPanel = React.forwardRef((props, ref) => {
 
           await throttle
           if (done || receivedLength === contentLength) {
-            await throttler(1000)
+            await throttler(500)
             break
           }
         }

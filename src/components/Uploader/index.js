@@ -50,7 +50,7 @@ const Uploader = React.forwardRef((props, ref) => {
       <Downloader texture={uploadedImage} title={outputTitle} layers={props.layers} />
       <div className="uploader">
         <div>
-          <div className="header">{`${title} Art`}</div>
+          <div className="header">{`${title}`}</div>
           <div className="enter-title">
             <p>Enter Name</p>
             <label>
