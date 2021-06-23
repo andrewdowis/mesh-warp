@@ -1,33 +1,8 @@
-/*
-
-MAIN COMP:
-  Comp: 1000x1000
-  Guide: 1200x1200
-
-
-RIGHT SOCK:
-  Canvas 1 (lives on main comp):
-    294x971
-      Bitmap Data Drawn into Canvas:
-        x: -4, y: -2
-        590x975
-
-LEFT SOCK:
-  Canvas 1 (initial warping used in Canvas 2):
-    297x974
-      Bitmap Data Drawn into Canvas:
-        x: -293 (Align.RIGHT), y: -1
-        590x975
-      Guide:
-        487x1140
-  Canvas 2 (lives on main comp, warps Canvas 1):
-    287x940
-*/
-
 import React, { useEffect, useRef, useState } from "react"
 import { Router, Route, Switch, withRouter } from "react-router-dom"
 import history from "./history.js"
 
+import Uploader from "./components/Uploader"
 import Builder from "./components/Builder"
 import Preview from "./components/Preview"
 import Gridder from "./components/Gridder"
@@ -46,8 +21,14 @@ export const Actions = {
 }
 
 export default function App() {
-  const [bodyRef, setBody] = useState()
+  const assets = [require("./assets/textures/asset_blank.jpg").default]
+  const assetData = useRef([])
+  const [shiftState, setShiftState] = useState(false)
+  const shiftDown = useRef(false)
+  const [mouseDown, setMouseDown] = useState(false)
 
+  const uploaderRef = useRef()
+  const [bodyRef, setBody] = useState()
   const dotIndexRef = useRef()
   const boundingRect = useRef()
   const mouseDownPos = useRef()
@@ -55,64 +36,29 @@ export default function App() {
   const iterationsRef = useRef()
   const [forceUpdate, setForceUpdate] = useState()
 
-  const assets = [
-    // require("./assets/textures/asset_01a.jpg").default,
-    require("./assets/textures/asset_01.jpg").default,
-    require("./assets/textures/asset_02.jpg").default,
-    require("./assets/textures/asset_03.jpg").default,
-    require("./assets/textures/asset_04.jpg").default,
-    require("./assets/textures/asset_bp2.jpg").default,
-    require("./assets/textures/asset_looney2.jpg").default,
-    require("./assets/textures/asset_tmnt2.jpg").default,
-    // require("./assets/textures/grids_01.jpg").default,
-    // require("./assets/textures/grids_02.jpg").default,
-  ]
-  const assetData = useRef([])
-  const [shiftState, setShiftState] = useState(false)
-  const shiftDown = useRef(false)
-  const [mouseDown, setMouseDown] = useState(false)
-
   const layers = [
     require("./assets/layers/layer_03_base.png").default,
     require("./assets/layers/layer_01.png").default,
-    require("./assets/layers/layer_02_multiply.png").default,
     require("./assets/layers/layer_03_base_02.png").default,
-    require("./assets/layers/sock_mask_left.png").default,
-    require("./assets/layers/sock_mask_right.png").default,
+    require("./assets/layers/layer_02_multiply.png").default,
+    require("./assets/layers/layer_00_safe_zone.png").default,
+    // require("./assets/layers/sock_mask_right.png").default,
   ]
   const layerData = useRef([])
 
-  // const whatever = useRef()
-
   const [sourceBitmapData, setSourceBitmapData] = useState()
-
-  const canvasHolder = useRef()
-
   const gridTarget = useRef()
 
   function handleKeyEvents(event) {
     if (event.keyCode === 16) {
-      let next
       switch (event.type) {
-        // case Actions.KEY_DOWN:
-        //   mouseDownPos.current = {
-        //     ...mouseCurPos.current,
-        //   }
-        //   next = true
-        //   break
         case Actions.KEY_UP:
           shiftDown.current = !shiftDown.current
           setShiftState(shiftDown.current)
-          // next = false
           break
         default:
           break
       }
-      // if (next !== null) {
-      //   shiftDown.current = next
-      //   setShiftState(next)
-      //   // event.target.style.cursor = next ? "none" : "default"
-      // }
     }
   }
 
@@ -153,22 +99,6 @@ export default function App() {
       case Actions.MOUSE_MOVE:
         const targetMeshable = CanvasDummyBuilder.meshables[gridTarget.current]
 
-        // Infinity means move everything as a large group
-        // if (dotIndexRef.current === Infinity) {
-        //   targetMeshable.meshCanvas.gridManager.positions.forEach((coord, i) => {
-        //     // console.log(i, targetMeshable.updateDot)
-        //     targetMeshable.updateDot(
-        //       i,
-        //       coord.x - (downX - event.pageX),
-        //       coord.y - (downY - event.pageY),
-        //       iterations
-        //     )
-        //   })
-        //   mouseDownPos.current = {
-        //     x: event.pageX,
-        //     y: event.pageY,
-        //   }
-        // } else {
         if (dotIndexRef.current === Infinity) return
 
         // const sub = 5
@@ -178,19 +108,12 @@ export default function App() {
 
         const nextX = downX - boundX - document.documentElement.scrollLeft + (event.pageX - downX) / sub
         const nextY = downY - boundY - document.documentElement.scrollTop + (event.pageY - downY) / sub
-        targetMeshable.updateDot(
-          dotIndexRef.current,
-          nextX,
-          nextY,
-          // event.pageX - boundX,
-          // event.pageY - boundY - document.documentElement.scrollTop,
-          iterationsRef.current
-        )
+        targetMeshable.updateDot(dotIndexRef.current, nextX, nextY, iterationsRef.current)
         mouseCurPos.current = {
           x: event.pageX,
           y: event.pageY,
         }
-        // }
+
         setForceUpdate(Math.random())
         break
       default:
@@ -215,9 +138,7 @@ export default function App() {
         if (++completed === assets.length + layers.length) {
           const img = assetData.current[0]
 
-          // setTimeout(() => {
           setSourceBitmapData(img)
-          // }, 1000)
           CanvasDummyBuilder.init(img)
         }
       }
@@ -245,35 +166,37 @@ export default function App() {
 
   if (!sourceBitmapData) return <div className="loading">LOADING!</div>
 
+  /*
+
+Components:
+
+Comps:    Loads a number of bitmaps and puts them into a grid where they can be quickly compared
+            - originally built to compare different warps between the App and Photoshop
+Gridder:  Generates a colored grid with custom colors
+          -   originally used to instantly generate reference grid mesh images to overlay onto designs
+              or use as temporary design meshes
+
+*/
+
   return (
     <Router history={history}>
       <Switch>
+        <Route path="/comps" component={Comps} />
+        <Route path="/gridder" component={Gridder} />
         <Route
-          path="/comps"
-          // path="/"
-          render={props => <Comps />}
+          path="/builder"
+          render={() => (
+            <Builder
+              sourceBitmapData={sourceBitmapData}
+              dispatch={handleMouseEvent}
+              forceUpdate={forceUpdate}
+              showDots={!mouseDown}
+              color={shiftState}
+            />
+          )}
         />
-        <Route
-          path="/grid"
-          // path="/"
-          render={props => <Gridder />}
-        />
-        <Route
-          path="/admin"
-          // path="/"
-          render={props => {
-            return (
-              <Builder
-                sourceBitmapData={sourceBitmapData}
-                dispatch={handleMouseEvent}
-                forceUpdate={forceUpdate}
-                showDots={!mouseDown}
-                color={shiftState}
-              />
-            )
-          }}
-        />
-        <Route path="" render={props => <Preview thumbs={assetData.current} layers={layerData.current} />} />
+        <Route path="/preview" component={() => <Preview thumbs={assetData.current} layers={layerData.current} />} />
+        <Route exact path="/" component={() => <Uploader ref={uploaderRef} layers={layerData.current} />} />
       </Switch>
     </Router>
   )

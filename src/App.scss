@@ -1,7 +1,24 @@
+@import "./assets/styles/variables";
+
 body {
-  background-color: #6c6c6c;
+  // background-color: #6c6c6c;
   color: white;
   text-align: center;
+
+  // width: 100vw;
+  // height: 100vh;
+}
+
+* {
+  user-select: none;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
 }
 
 .canvas-container {
@@ -10,12 +27,34 @@ body {
   width: fit-content;
 }
 
-img {
-  // opacity: 0.5;
-  background-color: black;
-}
+// img {
+//   // opacity: 0.5;
+//   background-color: black;
+// }
 
 .loading {
   transform: translateY(50vh);
   position: relative;
+}
+
+.section-header {
+  width: calc(100vw - 128px);
+  font-family: $font-family;
+  font-size: 48px;
+  color: #000000;
+  letter-spacing: 0;
+  text-align: center;
+  margin: auto;
+  position: relative;
+
+  p {
+    font-weight: 700;
+  }
+
+  img {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    margin-top: -20px;
+  }
 }

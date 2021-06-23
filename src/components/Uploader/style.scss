@@ -1,0 +1,54 @@
+@import "../../assets/styles/variables";
+
+.mocker {
+  display: flex;
+  flex-direction: column;
+  margin-left: 130px;
+}
+
+.uploader {
+  padding: 20px;
+  margin: 20px;
+  color: $black;
+  font-family: $font-family, sans-serif;
+  text-align: left;
+  width: 510px;
+  height: 600px;
+  background-color: $white;
+  border: 5px solid $white;
+  box-sizing: unset;
+  -moz-box-sizing: unset;
+  -webkit-box-sizing: unset;
+  //
+  letter-spacing: 0;
+  width: fit-content;
+
+  .header {
+    font-size: 24px;
+    color: #000000;
+    letter-spacing: 0;
+  }
+
+  .enter-title {
+    width: 225px;
+    margin-bottom: 20px;
+
+    border-radius: 4px;
+    font-size: 14px;
+    color: #000000;
+
+    line-height: 20px;
+
+    input {
+      font-family: $font-family, sans-serif;
+      width: 225px;
+      padding: 10px;
+      border: 2px solid #f2f2f2;
+      border-radius: 4px;
+    }
+  }
+
+  .row {
+    display: flex;
+  }
+}

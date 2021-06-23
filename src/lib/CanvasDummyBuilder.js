@@ -26,50 +26,51 @@ class CanvasDummyBuilder {
         data: right_sock,
       },
       {
-        id: "left_sock_source",
-        width: 297,
-        height: 974,
+        id: "left_sock_source", // the ID give to a canvas element created by this object
+        width: 297, // the width of the left_sock_source canvas
+        height: 974, // the height of the left_sock_source canvas
         image: {
+          // the position and size of the image DRAWN into the left_sock_source canvas
           x: -293,
           y: -1,
           width: 590,
           height: 975,
         },
-      },
+      }, // this basically outputs a flat, unwarped canvas to represent
+      // the left-half of the design for the left
       {
-        id: "left_sock_target_01",
-        width: 287,
-        height: 940,
+        id: "left_sock_target_01", // the ID give to a canvas element created by this object
+        width: 287, // the width of the left_sock_target_01 canvas
+        height: 940, // the hieght of the left_sock_target_01 canvas
         image: {
+          // the position and size of the image DRAWN into the left_sock_target_01 canvas
           x: -10,
           y: -34,
           width: 297,
           height: 974,
-          src: "left_sock_source",
+          src: "left_sock_source", // this option specifies the image source to be the left_sock_source canvas
         },
-        data: left_sock_01,
+        data: left_sock_01, // the name of the JSON file used to warp this image
       },
       {
-        id: "left_sock_target_02",
-        width: 1000,
-        height: 1000,
-        image: { src: "left_sock_target_01" },
-        data: left_sock_02,
+        id: "left_sock_target_02", // the ID give to a canvas element created by this object
+        width: 1000, // the width of the left_sock_target_02 canvas
+        height: 1000, // the height of the left_sock_target_02 canvas
+        image: { src: "left_sock_target_01" }, // use the left_sock_target_01 canvas as our image reference
+        data: left_sock_02, // the name of the JSON file used to warp this image
       },
     ]
 
     let prev
     this.meshables = []
 
+    this.scaled_canvas = this.scaleDownTexture(src)
     this.dummies = canvas_data.map((obj, i) => {
       const dummy = new CanvasDummy()
       obj.image = obj.image || {}
-      if (obj.image.src) {
-      } else {
-      }
 
       const addMesh = obj.image.src || false
-      obj.image.src = addMesh ? prev : src
+      obj.image.src = addMesh ? prev : this.scaled_canvas
 
       if (addMesh) obj.mesh = addMesh
 
@@ -83,8 +84,31 @@ class CanvasDummyBuilder {
 
       return dummy
     })
-
+    this.scaled_canvas = null
     // throw new Error("STOP")
+  }
+
+  scaleDownTexture(img) {
+    const canvas = this.scaled_canvas || document.createElement("canvas")
+    const ctx = canvas.getContext("2d")
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+    canvas.width = 720
+    canvas.height = 1188
+
+    ctx.beginPath()
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+    if (img.width > 720) {
+      const scale = 72 / 300
+      const scaled_width = img.width * scale
+      const scaled_height = img.height * scale
+      ctx.drawImage(img, (720 - scaled_width) / 2, 18, scaled_width, scaled_height)
+      // ctx.drawImage(src, 400, 18, scaled_width, scaled_height)
+    } else {
+      ctx.drawImage(img, 0, 0)
+    }
+
+    return canvas
   }
 
   refresh(img) {
@@ -93,13 +117,14 @@ class CanvasDummyBuilder {
     })
 
     non_meshy.forEach((dummy, i) => {
-      dummy.values[0] = img
+      dummy.values[0] = this.scaleDownTexture(img)
       dummy.refresh(true)
     })
 
     this.meshables.forEach((dummy, i) => {
       dummy.refresh(true)
     })
+    this.scaled_canvas = null
   }
 }
 

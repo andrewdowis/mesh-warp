@@ -217,7 +217,7 @@ const Builder = React.forwardRef((props, ref) => {
             <p>{`${!wireframeOpacity ? "Show" : "Hide"} Wireframe`}</p>
           </div>
         </div>
-        {/* <div className="button-holder">
+        <div className="button-holder">
           <div
             className="button"
             onClick={() => {
@@ -226,7 +226,7 @@ const Builder = React.forwardRef((props, ref) => {
           >
             <p>{`${!showDots ? "Show" : "Hide"} Dots`}</p>
           </div>
-        </div> */}
+        </div>
         <div className="button-holder">
           <div
             className="button"
@@ -306,17 +306,10 @@ const Builder = React.forwardRef((props, ref) => {
                 if (gm.positions[index + 1]) output += ", "
               })
 
-              // output += `], "viewPoints": [ `
-              // controlPoints.forEach(index => {
-              //   output += index
-              //   if (gm.positions[index + 1]) output += ", "
-              // })
               output += "]}"
 
               console.clear()
               console.log(output)
-
-              // width: ${GridManager.width}, height: ${GridManager.height}, width: ${GridManager.width}, height: ${GridManager.height},  `
             }}
           >
             <p>Output Points</p>

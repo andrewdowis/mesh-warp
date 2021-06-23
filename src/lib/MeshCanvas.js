@@ -1,23 +1,4 @@
-import { MathUtils } from "@ff0000-ad-tech/ad-utils"
-import { getAnglePoint } from "@ff0000-ad-tech/ad-utils/lib/MathUtils"
-
-const getAverage = (...numbers) => {
-  let number = 0
-  numbers.forEach(num => (number += num))
-  return number / numbers.length
-}
-
-const averagePoints = (...points) => {
-  let newPoint = { x: 0, y: 0 }
-  points.forEach(point => {
-    newPoint.x += point.x
-    newPoint.y += point.y
-  })
-  return {
-    x: newPoint.x / points.length,
-    y: newPoint.y / points.length,
-  }
-}
+import * as CanvasUtils from "./red/CanvasUtils"
 
 export default class MeshCanvas {
   init(width, height, image, gridManager) {
@@ -136,7 +117,7 @@ export default class MeshCanvas {
     const skip_amount = rewind_amount * rows - 1
 
     canvi.forEach((canvas, c) => {
-      const offset = c // * 1
+      const offset = c
 
       let ctx = canvas.getContext("2d")
       ctx.clearRect(0, 0, w, h)
@@ -200,6 +181,8 @@ export default class MeshCanvas {
 
         if (i && i - rewind_amount < 0) i += skip_amount
       }
+
+      CanvasUtils.sharpen(ctx, w, h, 0.3)
     })
   }
 
